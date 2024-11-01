@@ -5,6 +5,7 @@ local nx = {}
 local ny = {}
 local target_crop
 local seed_store_slot=1
+local extra_seed_store_slot = 1
 local drop_store_slot=1
 
 local function getDB()
@@ -25,6 +26,10 @@ end
 
 local function getSeedStoreSlot()
     return seed_store_slot
+end
+
+local function getExtraSeedStoreSlot()
+    return extra_seed_store_slot
 end
 
 local function getDropStoreSlot()
@@ -48,6 +53,11 @@ local function incSeedStoreSlot()
     return seed_store_slot
 end
 
+local function incExtraSeedStoreSlot()
+    extra_seed_store_slot = extra_seed_store_slot + 1
+    return extra_seed_store_slot
+end
+
 local function incDropStoreSlot()
     drop_store_slot = drop_store_slot + 1
     return drop_store_slot
@@ -68,6 +78,19 @@ local function getWorst()
     return key
 end
 
+local function getAdj(pos)
+    local x,y = pos
+    local adj = {}
+    local newpos = {{x+1, y},{x-1,y},{x,y-1},{x, y+1}}
+
+    for i = 1,#newpos do
+        if getEntry(newpos[i]) ~= nil then
+            adj[#adj + 1 ] = newpos[i]
+        end
+    end
+    return adj
+end
+
 local function validLayout()
     local valid = false
     local next_to_start = {{3,1}, {1,3}} -- just two cause it's in the corner
@@ -86,11 +109,16 @@ return {
     getBounds=getBounds, 
     getEntry=getEntry, 
     getSeedStoreSlot=getSeedStoreSlot,
+    getExtraSeedStoreSlot=getExtraSeedStoreSlot,
     getDropStoreSlot=getDropStoreSlot,
+    getTargetCrop=getTargetCrop,
     setBounds=setBounds, 
     setEntry=setEntry, 
     incSeedStoreSlot=incSeedStoreSlot,
+    incExtraSeedStoreSlot=incExtraSeedStoreSlot,
     incDropStoreSlot=incDropStoreSlot,
+    setTargetCrop=setTargetCrop,
     getWorst=getWorst, 
     validLayout=validLayout,
+    getAdj=getAdj
 }

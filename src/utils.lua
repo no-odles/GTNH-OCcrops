@@ -27,46 +27,58 @@ local function dblCrop(pos)
 end
 
 local function isFull()
-    return 
+    robot.select(config.inv_size)
+    if getStackInInternalSlot() == nil then
+        return false
+    else
+        return  true
+    end
 end
 
-local function dumpInv
-    nav.pause()
-    nav.moveTo(config.stick_pos)
-    local success = false
-    local seed_slot, drop_slot = db.getSeedStoreSlot(), db.getDropStoreSlot()
-    for slot = 1, config.last_storage_slot do
-        success = false
-        robot.select(slot)
-        item = inv_c.getStackInInternalSlot()
-        if item.name == "IC2:itemCropSeed" then
-            while ~success and seed_slot <= inv_c.getInventorySize(config.seed_store_side) do
-                success = dropIntoSlot(config.seed_store_side, seed_slot)
-                seed_slot = db.incSeedStoreSlot()
+local function elEq(a,b)
+    if type(a) == type({}) then
+        if type(b) == type({}) then
+            if #a == #b then
+                for k,v in pairs(a) do
+                    if not elEq(b[k], v)  then
+                        return false
+                    end
+                end
+                return true
+            else
+                return false
             end
         else
-            while ~success and drop_slot <= inv_c.getInventorySize(config.drop_store_side) do
-                success = dropIntoSlot(config.drop_store_side, seed_slot)
-                seed_slot = db.incDropStoreSlot()
+            return false
+        end
+    else
+        return a == b
+    end
+end
+
+local function setDiff(a,b)
+    local out = {}
+    for k,v in pairs(a) do
+        local in_b = false
+        for _, vb in pairs(b) do
+            in_b = elEq(v, vb)
+            if in_b then
+                break
             end
         end
-
+        if not in_b then
+            out[k] = v
+        end
     end
-    nav.resume()
-    return success
+    return out
 end
 
-local function restockSticks()
-    nav.pause()
-    nav.moveTo(config.stick_pos)
-    robot.select(config.cropstick_slot)
-    inv_c.suckFromSlot(sides.down, 2) --drawer main slot is 2, pretty sure 1 is the upgrade slot
-    resume()
-end
 
 return {
     isDone=isDone, 
     sgn=sgn, 
-    dblCrop=dblCrop, 
-    dumpInv=dumpInv, 
-    restockSticks=restockSticks}
+    dblCrop=dblCrop,
+    isFull=isFull,
+    setDiff=setDiff,
+    elEq=elEq
+}

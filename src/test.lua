@@ -1,6 +1,8 @@
-local y = 0
+local db = require("testdb")
 
-local function yeet(x)
-    local z = y = x
-    return z
-end
+print(db.getSeedStoreSlot())
+
+local s1 = require("testscope")
+
+print(db.getSeedStoreSlot())
+
