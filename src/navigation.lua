@@ -8,12 +8,12 @@ local temp_pos
 local temp_face
 
 --directions, NOT the same thing as the sides api
-local DOWN = 7
-local UP = 8
-local NORTH = 9
-local SOUTH = 10
-local WEST = 11
-local EAST = 12
+local DOWN = 4
+local UP = 5
+local NORTH = 0
+local EAST = 1
+local SOUTH = 2
+local WEST = 3
 
 local function getDir()
     return facing
@@ -73,18 +73,19 @@ local function moveForward(n)
     moveN(n)
 
     if facing == WEST then 
-        pos = {pos[1] - n, pos[2]}
+        pos[1] = pos[1] - n
     elseif facing == EAST then
-        pos = {pos[1] + n, pos[2]}
+        pos[1] = pos[1] + n
     elseif facing == NORTH then
-        pos = {pos[1], pos[2] + n}
+        pos[2] = pos[2] + n
     else
-        pos = {pos[1], pos[2] - n}
+        pos[2] = pos[2] - n
     end
     return
 end
 
-local function faceDir(dir)
+local function faceDir(dir_unsafe)
+    local dir = dir_unsafe % 4
     if dir == facing then
         return
     elseif dir == facing + 3 or dir == facing - 1 then
@@ -126,7 +127,7 @@ local function moveTo(dest)
         return 
     end
 
-    local dx, dy = x1 - x2, y1 - y2
+    local dx, dy = x2-x1, y2-y1
     local path = {}
 
     if dx > 0 then
