@@ -1,12 +1,13 @@
 local robot = require("robot")
-local config = require("config")
-nav = require("navigation")
 local sides = require("sides")
-
 local component = require("component")
 local inv_c = component.inventory_controller
 
-local function isdone()
+local config = require("config")
+local nav = require("navigation")
+
+
+local function isDone()
 
 end
 
@@ -28,7 +29,7 @@ end
 
 local function isFull()
     robot.select(config.inv_size)
-    if getStackInInternalSlot() == nil then
+    if inv_c.getStackInInternalSlot() == nil then
         return false
     else
         return  true

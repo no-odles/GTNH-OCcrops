@@ -1,12 +1,12 @@
 
-sides = require("sides")
-component = require("component")
-geo = component.geolyzer
+local sides = require("sides")
+local component = require("component")
+local geo = component.geolyzer
 
-db = require("database")
-config = require("config")
-actions = require("actions")
-nav = require("navigation")
+local db = require("database")
+local config = require("config")
+local actions = require("actions")
+local nav = require("navigation")
 
 -- Block Enums
 local AIR = 0
@@ -89,22 +89,22 @@ local function score(blockscan)
     end
 end
 local function scanForWeeds()
-    scan = geo.scan(sides.down)
+    local scan = geo.analyze(sides.down)
     return isWeed(scan)
 end
 local function scanForward()
-    --TODO: Fix scan = geo.scan(geo.getDir())
+    local scan = geo.analyze(sides.forward)
     return score(scan)
 end
 
 local function scanDown()
-    scan = geo.scan(sides.down)
+    local scan = geo.analyze(sides.down)
     return score(scan)
 end
 
 
 local function setTarget()
-    local scan = geo.scan(sides.down)
+    local scan = geo.analyze(sides.down)
     local cname = scan["crop:name"]
     if cname == nil then
         return false, WORST
@@ -129,7 +129,7 @@ return {
     CSTICK=CSTICK,
     WEED=WEED,
     PLANT=PLANT,
-    UNKNOWN=UNKOWN,
+    UNKNOWN=UNKNOWN,
 
     -- score Enums
     WORST=WORST,

@@ -79,7 +79,7 @@ local function getWorst()
 end
 
 local function getAdj(pos)
-    local x,y = pos
+    local x,y = pos[1], pos[2]
     local adj = {}
     local newpos = {{x+1, y},{x-1,y},{x,y-1},{x, y+1}}
 

@@ -1,13 +1,15 @@
 local robot = require("robot")
+local component = require("component")
+local inv_c = component.inventory_controller
 local computer = require("computer")
 local os = require("os")
+
 local config = require("config")
 local nav = require("navigation")
 local utils = require("utils")
 local geo = require("geolyse")
 local db = require("database")
-local component = require("component")
-local inv_c = component.inventory_controller
+local inv = require("inventory")
 
 local function charge()
     geo.pause()
@@ -17,17 +19,35 @@ local function charge()
     geo.resume()
 end
 
+local function till()
+    robot.useDown()
+end
 
-local function pickUp()
-    if utils.isFull() then
-        dumpInv()
-    end
 
-    while robot.suckDown(config.first_storage_slot) do -- TODO, check if this loop is necessary
-        if utils.isFull() then
-            dumpInv()
+
+local function placeCropstick(n)
+    if n == nil then
+        -- place cropsticks like there's an air block below
+        if utils.dblCrop(nav.getPos()) then
+            n = 2 
+        else
+            n = 1
         end
     end
+
+    robot.select(config.cropstick_slot)
+    if robot.count() < n+1 then
+        inv.restockSticks()
+    end
+
+    inv_c.equip()
+
+    for _=1,n do
+        robot.useDown()
+    end
+
+    inv_c.equip() -- return spade to hand
+
 end
 
 local function weed(replace)
@@ -78,40 +98,11 @@ end
 
 
 
-local function till()
-    robot.useDown()
-end
-
 local function harvest()
-    robot.swingDown()
-    pickUp()
-    placeCropstick() -- annoying, lol
+    robot.useDown()
+    placeCropstick(1)
 end
 
-local function placeCropstick(n)
-    if n == nil then
-        -- place cropsticks like there's an air block below
-        if utils.dblCrop(nav.getPos()) then
-            n = 2 
-        else
-            n = 1
-        end
-    end
-
-    robot.select(config.cropstick_slot)
-    if robot.count() < n+1 then
-        restockSticks()
-    end
-
-    inv_c.equip()
-
-    for _=1,n do
-        robot.useDown()
-    end
-
-    inv_c.equip() -- return spade to hand
-
-end
 
 local function recoverMissing()
     --will always leave the robot at z = 0
@@ -125,61 +116,13 @@ local function recoverMissing()
     nav.moveRel({0,0,1})
     placeCropstick()
 
-    block, score = scanDown()
+    local block, score = nav.scanDown()
     if block == geo.CSTICK then
         return true
     else
         return false
     end
 end
-
-local function dumpInv
-    nav.pause()
-    nav.moveTo(config.above_storage)
-    nav.moveRel({0,0,-1})
-    nav.faceDir(nav.EAST)
-    local success
-    local seed_slot, extra_seed_slot, drop_slot = db.getSeedStoreSlot(), db.getExtraSeedStoreSlot(), db.getDropStoreSlot()
-    for slot = config.first_storage_slot, config.inv_size do
-        success = false
-        robot.select(slot)
-        item = inv_c.getStackInInternalSlot()
-        if item == nil then 
-            success = true
-        elseif item.name == "IC2:itemCropSeed" then
-
-            if item["crop:name"] == db.getTargetCrop() then 
-                while not success and seed_slot <= inv_c.getInventorySize(config.seed_store_side) do
-                    success = dropIntoSlot(config.seed_store_side, seed_slot)
-                    seed_slot = db.incSeedStoreSlot()
-                end
-            else
-                while not success and seed_slot <= inv_c.getInventorySize(config.extra_seed_store_side) do
-                    success = dropIntoSlot(config.extra_seed_store_side, extra_seed_slot)
-                    extra_seed_slot = db.incExtraSeedStoreSlot()
-                end
-            end
-        else
-            while not success and drop_slot <= inv_c.getInventorySize(config.drop_store_side) do
-                success = dropIntoSlot(config.drop_store_side, seed_slot)
-                seed_slot = db.incDropStoreSlot()
-            end
-        end
-
-    end
-    nav.moveRel({0,0,1})
-    nav.resume()
-    return success
-end
-
-local function restockSticks()
-    nav.pause()
-    nav.moveTo(config.stick_pos)
-    robot.select(config.cropstick_slot)
-    inv_c.suckFromSlot(sides.down, 2) --drawer main slot is 2, pretty sure 1 is the upgrade slot
-    resume()
-end
-
 
 local function prospectGround()
     local block, score = geo.scanDown()
@@ -270,19 +213,29 @@ local function prospectRegion()
 end
 
 local function init()
-    --Determine grid size
-    local valid_farm
+    -- charge
+    charge()
+
+    -- restock inventory
+    inv.restockSticks()
+
+
     robot.select(config.spade_slot)
     inv_c.equip()
 
+    -- determine target crop 
     nav.moveTo(config.start_pos)
     local success = geo.setTarget()
 
-    if not success then
+    if success then
+        print("Crop is %s", db.getTargetCrop)
+    else
         print("Invalid target plant! Make sure the lower right corner has the target plant in it.")
         return
     end
 
+    --Determine grid size
+    local valid_farm
     local nx, ny
     valid_farm, nx, ny = prospectRegion()
     db.setBounds(nx, ny)
@@ -300,7 +253,5 @@ return {
     recursiveWeed=recursiveWeed, 
     till=till, 
     placeCropstick=placeCropstick, 
-    recoverMissing=recoverMissing,
-    dumpInv=dumpInv, 
-    restockSticks=restockSticks
+    recoverMissing=recoverMissing
 }
