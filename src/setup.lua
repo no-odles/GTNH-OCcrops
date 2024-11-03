@@ -7,9 +7,11 @@ local scripts = {
     'config.lua',
     'database.lua',
     'geolyse.lua',
+    'inventory.lua',
     -- 'events.lua',
     'navigation.lua',
-    'propagate.lua'
+    'propagate.lua',
+    'utils.lua'
 }
 
 -- BRANCH
