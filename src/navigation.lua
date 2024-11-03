@@ -1,8 +1,7 @@
 local robot = require("robot")
 local utils = require("utils")
 local config = require("config")
-local pos = config.start_pos -- standard cartesian coords, z coord is basically never used
-local z = 0 -- secret third coordinate, mostly unused
+local pos = {table.unpack(config.start_pos)} -- standard cartesian coords, z coord is basically never used
 local facing = 0 -- 0,1,2,3, clockwise
 local temp_pos = {}
 local temp_face = {}
@@ -44,9 +43,9 @@ local function flyN(n, dir)
     end
 
     if dir == UP then 
-        pos = {pos[1], pos[2], pos[3] + n}
+        pos[3] = pos[3] + n 
     else
-        pos = {pos[1], pos[2], pos[3] - n}
+        pos[3] = pos[3] - n
     end
 end
 
@@ -180,6 +179,10 @@ local function resume()
     temp_face[ltf] = nil
 end
 
+local function getTempPos()
+    return temp_pos, temp_face
+end
+
 
 return {
     UP=UP, 
@@ -196,5 +199,6 @@ return {
     flyN=flyN, 
     faceDir=faceDir,
     pause=pause,
-    resume=resume
+    resume=resume,
+    get_temp_pos=getTempPos
 }
