@@ -19,7 +19,7 @@ local function getDir()
 end
 
 local function getPos()
-    return pos
+    return {table.unpack(pos)}
 end
 
 local function carefulFly(dir)
@@ -179,10 +179,6 @@ local function resume()
     temp_face[ltf] = nil
 end
 
-local function getTempPos()
-    return temp_pos, temp_face
-end
-
 
 return {
     UP=UP, 
@@ -199,6 +195,5 @@ return {
     flyN=flyN, 
     faceDir=faceDir,
     pause=pause,
-    resume=resume,
-    get_temp_pos=getTempPos
+    resume=resume
 }

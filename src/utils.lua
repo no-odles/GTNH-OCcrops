@@ -18,7 +18,6 @@ local function dblCrop(pos)
     return (x % 2 + y % 2 ) == 1
 end
 
-
 local function elEq(a,b)
     if type(a) == type({}) then
         if type(b) == type({}) then
@@ -57,11 +56,15 @@ local function setDiff(a,b)
     return out
 end
 
+local function copy(tab)
+    return {table.unpack(tab)}
+end
 
 return {
     isDone=isDone, 
     sgn=sgn, 
     dblCrop=dblCrop,
     setDiff=setDiff,
-    elEq=elEq
+    elEq=elEq,
+    copy=copy
 }
