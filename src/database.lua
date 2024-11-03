@@ -1,4 +1,19 @@
-local geo = require("geolyse")
+-- Block Enums
+local AIR = 0
+local DIRT = 1
+local TDIRT = 2
+local BWATER = 3
+local CSTICK = 4
+local WEED = 6
+local PLANT = 7
+local UNKNOWN = -1
+
+-- score Enums
+local WORST = -3 -- can't be worse than the worst
+local WRONG_PLANT = -2 -- replace wrong plants before empty cropsticks
+local EMPTY = -1
+local WATER = 111 -- crop will never be replaced (Max score should be 93 no matter the config)
+
 
 local farmdb = {}
 local nx = {}
@@ -64,7 +79,7 @@ local function incDropStoreSlot()
 end
 
 local function getWorst()
-    local worst = geo.WATER
+    local worst = WATER
     local key
     for i = 1,nx do
         for j = 1,ny do 
@@ -98,13 +113,29 @@ local function validLayout()
     for i = 1,#next_to_start do
         key = next_to_start[i]
         valid = valid or farmdb[key] >= 0
-        valid = valid or farmdb[key] == geo.WRONG_PLANT
+        valid = valid or farmdb[key] == WRONG_PLANT
     end
 
     return valid
 end
 
 return {
+    -- BLOCK NAMES
+    AIR=AIR,
+    DIRT=DIRT,
+    TDIRT=TDIRT,
+    BWATER=BWATER,
+    CSTICK=CSTICK,
+    WEED=WEED,
+    PLANT=PLANT,
+    UNKNOWN=UNKNOWN,
+
+    -- score Enums
+    WORST=WORST,
+    WRONG_PLANT=WRONG_PLANT,
+    EMPTY=EMPTY,
+    WATER=WATER,
+    
     getDB=getDB, 
     getBounds=getBounds, 
     getEntry=getEntry, 

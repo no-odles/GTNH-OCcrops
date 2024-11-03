@@ -5,35 +5,18 @@ local geo = component.geolyzer
 
 local db = require("database")
 local config = require("config")
-local actions = require("actions")
-local nav = require("navigation")
 
--- Block Enums
-local AIR = 0
-local DIRT = 1
-local TDIRT = 2
-local BWATER = 3
-local CSTICK = 4
-local WEED = 6
-local PLANT = 7
-local UNKNOWN = -1
-
--- score Enums
-local WORST = -3 -- can't be worse than the worst
-local WRONG_PLANT = -2 -- replace wrong plants before empty cropsticks
-local EMPTY = -1
-local WATER = 111 -- crop will never be replaced (Max score should be 93 no matter the config)
 
 local function isEmpty(block)
-    return block == AIR
+    return block == db.AIR
 end
 
 local function isFarmTile(block)
-    return block == TDIRT or block == WATER
+    return block == db.TDIRT or block == db.WATER
 end
 
 local function isFarmable(block)
-    return block == PLANT or block == CSTICK or block == WEED
+    return block == db.PLANT or block == db.CSTICK or block == db.WEED
 end
 
 local function isWeed(crop_scan)
@@ -66,26 +49,26 @@ local function score(blockscan)
         local cname = blockscan["crop:name"]
         if cname == nil then
             -- empty / double cropstick
-            return CSTICK, EMPTY
+            return db.CSTICK, db.EMPTY
         elseif cname == db.getTargetCrop() then
             if isWeed(blockscan) then
-                return WEED, WORST
+                return db.WEED, db.WORST
             else
-                return PLANT, evalCrop(blockscan)
+                return db.PLANT, evalCrop(blockscan)
             end
         else 
-            return PLANT, WRONG_PLANT
+            return db.PLANT, db.WRONG_PLANT
         end
     elseif name == "minecraft:air" then
-        return AIR, EMPTY
+        return db.AIR, db.EMPTY
     elseif name == "minecraft:water" then
-        return BWATER, WATER
+        return db.BWATER, db.WATER
     elseif name == "minecraft:dirt" then
-        return DIRT, EMPTY
+        return db.DIRT, db.EMPTY
     elseif name == "minecraft:tilledDirt" then
-        return TDIRT, EMPTY
+        return db.TDIRT, db.EMPTY
     else 
-        return UNKNOWN, WATER 
+        return db.UNKNOWN, db.WATER 
     end
 end
 local function scanForWeeds()
@@ -107,7 +90,7 @@ local function setTarget()
     local scan = geo.analyze(sides.down)
     local cname = scan["crop:name"]
     if cname == nil then
-        return false, WORST
+        return false, db.WORST
     else
         db.setTargetCrop(cname)
         local _, sc = score(scan)
@@ -121,22 +104,6 @@ end
 
 
 return {
-    -- BLOCK NAMES
-    AIR=AIR,
-    DIRT=DIRT,
-    TDIRT=TDIRT,
-    BWATER=BWATER,
-    CSTICK=CSTICK,
-    WEED=WEED,
-    PLANT=PLANT,
-    UNKNOWN=UNKNOWN,
-
-    -- score Enums
-    WORST=WORST,
-    WRONG_PLANT=WRONG_PLANT,
-    EMPTY=EMPTY,
-    WATER=WATER,
-
     -- functions
     scandown=scanDown, 
     scanForward=scanForward, 

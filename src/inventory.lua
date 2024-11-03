@@ -4,10 +4,18 @@ local component = require("component")
 local inv_c = component.inventory_controller
 
 local nav = require("navigation")
-local utils = require("utils")
 local db = require("database")
 local config = require("config")
 
+
+local function isFull()
+    robot.select(config.inv_size)
+    if inv_c.getStackInInternalSlot() == nil then
+        return false
+    else
+        return  true
+    end
+end
 
 local function dumpInv(dont_pause)
     -- assumes we're in the right place if dont_pause is set to true and we're on the ground
@@ -62,12 +70,12 @@ local function dumpInv(dont_pause)
 end
 
 local function pickUp()
-    if utils.isFull() then
+    if isFull() then
         dumpInv()
     end
 
     while robot.suckDown(config.first_storage_slot) do -- TODO, check if this loop is necessary
-        if utils.isFull() then
+        if isFull() then
             dumpInv()
         end
     end
@@ -90,14 +98,6 @@ local function restockSticks(dont_pause)
     end
 end
 
-local function isFull()
-    robot.select(config.inv_size)
-    if inv_c.getStackInInternalSlot() == nil then
-        return false
-    else
-        return  true
-    end
-end
 
 return {
     dumpInv=dumpInv,

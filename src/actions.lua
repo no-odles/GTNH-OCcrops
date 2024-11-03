@@ -117,7 +117,7 @@ local function recoverMissing()
     placeCropstick()
 
     local block, score = nav.scanDown()
-    if block == geo.CSTICK then
+    if block == db.CSTICK then
         return true
     else
         return false
@@ -126,7 +126,7 @@ end
 
 local function prospectGround()
     local block, score = geo.scanDown()
-    if block == geo.DIRT then
+    if block == db.DIRT then
         till()
         block, score = geo.scanDown()
     end
@@ -149,11 +149,11 @@ local function prospectNext()
         on_farm, block, score = prospectGround()
         nav.flyN(1, nav.UP)
 
-        if block == geo.TDIRT then 
+        if block == db.TDIRT then 
             placeCropstick() --will fail if theres water, but nbd
         end
-    elseif geo.isFarmable(block) then
-        if block == geo.WEED then
+    elseif db.isFarmable(block) then
+        if block == db.WEED then
             weed()
         end
     else -- something else
