@@ -6,9 +6,9 @@ local scripts = {
     'actions.lua',
     'config.lua',
     'database.lua',
-    'geolyse.lua'
+    'geolyse.lua',
     -- 'events.lua',
-    'nav.lua',
+    'navigation.lua',
     'propogate.lua'
 }
 
