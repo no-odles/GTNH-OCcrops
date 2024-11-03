@@ -4,8 +4,8 @@ local config = require("config")
 local pos = config.start_pos -- standard cartesian coords, z coord is basically never used
 local z = 0 -- secret third coordinate, mostly unused
 local facing = 0 -- 0,1,2,3, clockwise
-local temp_pos
-local temp_face
+local temp_pos = {}
+local temp_face = {}
 
 --directions, NOT the same thing as the sides api
 local DOWN = 4
@@ -164,13 +164,20 @@ local function moveRel(dpos)
 end
 
 local function pause()
-    temp_pos = getPos()
-    temp_face = getDir()
+    temp_pos[#temp_pos+1] = getPos()
+    temp_face[#temp_face+1] = getDir()
 end
 
 local function resume()
-    moveTo(temp_pos)
-    faceDir(temp_face)
+    if temp_pos[1] == nil then
+        return
+    end
+    local ltp, ltf = #temp_pos, #temp_face
+    moveTo(temp_pos[ltp])
+    faceDir(temp_face[ltf])
+
+    temp_pos[ltp] = nil
+    temp_face[ltf] = nil
 end
 
 

@@ -13,6 +13,7 @@ local inv = require("inventory")
 
 local function charge()
     nav.pause()
+    nav.moveTo(config.start_pos)
     while computer.energy() / computer.maxEnergy() < 0.99 do
         os.sleep(0.2)
     end
