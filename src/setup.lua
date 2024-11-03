@@ -9,7 +9,7 @@ local scripts = {
     'geolyse.lua',
     -- 'events.lua',
     'navigation.lua',
-    'propogate.lua'
+    'propagate.lua'
 }
 
 -- BRANCH
@@ -28,5 +28,5 @@ end
 
 -- INSTALL
 for i=1, #scripts do
-    shell.execute(string.format('wget -f %s%s/%s/src/', repo, branch, scripts[i]))
+    shell.execute(string.format('wget -f %s%s/src/%s', repo, branch, scripts[i]))
 end
