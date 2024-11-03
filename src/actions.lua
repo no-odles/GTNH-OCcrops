@@ -12,11 +12,11 @@ local db = require("database")
 local inv = require("inventory")
 
 local function charge()
-    geo.pause()
+    nav.pause()
     while computer.energy() / computer.maxEnergy() < 0.99 do
         os.sleep(0.2)
     end
-    geo.resume()
+    nav.resume()
 end
 
 local function till()
@@ -251,7 +251,10 @@ end
 return {
     init=init, 
     recursiveWeed=recursiveWeed, 
+    weed,
+    charge=charge,
     till=till, 
+    harvest,
     placeCropstick=placeCropstick, 
     recoverMissing=recoverMissing
 }

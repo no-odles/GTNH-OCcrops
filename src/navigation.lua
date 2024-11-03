@@ -117,7 +117,7 @@ local function moveTo(dest)
         z2 = z1
     elseif z2 > z1 then
         flyN(z2 - z1, UP)
-    elseif z1 < z2 then 
+    elseif z2 < z1 then 
         flyN(z1 - z2, DOWN)
     end
 
