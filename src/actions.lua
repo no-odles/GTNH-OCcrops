@@ -68,7 +68,7 @@ local function weed(replace)
         placeCropstick(1)
     end
 
-    robot.pickUp()
+    inv.pickUp()
 end
 
 local function recursiveWeedIterator(prev, done, replace)

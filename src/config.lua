@@ -1,7 +1,7 @@
 local robot = require("robot")
 local sides = require("sides")
 local config = {
-    inv_size = robot.inventorysize(),
+    inv_size = robot.inventorySize(),
     spade_slot = 1,
     cropstick_slot = 2,
     first_storage_slot = 3,

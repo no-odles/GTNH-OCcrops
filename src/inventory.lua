@@ -90,8 +90,18 @@ local function restockSticks(dont_pause)
     end
 end
 
+local function isFull()
+    robot.select(config.inv_size)
+    if inv_c.getStackInInternalSlot() == nil then
+        return false
+    else
+        return  true
+    end
+end
+
 return {
     dumpInv=dumpInv,
     pickUp=pickUp,
-    restockSticks=restockSticks
+    restockSticks=restockSticks,
+    isFull=isFull
 }

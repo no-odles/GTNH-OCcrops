@@ -1,12 +1,3 @@
-local robot = require("robot")
-local sides = require("sides")
-local component = require("component")
-local inv_c = component.inventory_controller
-
-local config = require("config")
-local nav = require("navigation")
-
-
 local function isDone()
 
 end
@@ -27,14 +18,6 @@ local function dblCrop(pos)
     return (x % 2 + y % 2 ) == 1
 end
 
-local function isFull()
-    robot.select(config.inv_size)
-    if inv_c.getStackInInternalSlot() == nil then
-        return false
-    else
-        return  true
-    end
-end
 
 local function elEq(a,b)
     if type(a) == type({}) then
@@ -79,7 +62,6 @@ return {
     isDone=isDone, 
     sgn=sgn, 
     dblCrop=dblCrop,
-    isFull=isFull,
     setDiff=setDiff,
     elEq=elEq
 }

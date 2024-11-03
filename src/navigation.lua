@@ -88,11 +88,11 @@ local function faceDir(dir)
     if dir == facing then
         return
     elseif dir == facing + 3 or dir == facing - 1 then
-        robot.turnleft() 
+        robot.turnLeft() 
         facing = dir
     else
         repeat
-            robot.turnright()
+            robot.turnRight()
             facing = (facing + 1) % 4
         until facing == dir
     end

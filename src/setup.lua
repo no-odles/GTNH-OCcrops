@@ -11,7 +11,8 @@ local scripts = {
     -- 'events.lua',
     'navigation.lua',
     'propagate.lua',
-    'utils.lua'
+    'utils.lua',
+    'uninstall.lua'
 }
 
 -- BRANCH
