@@ -1,6 +1,7 @@
 local robot = require("robot")
 local utils = require("utils")
-local pos = {0,0,0} -- standard cartesian coords, z coord is basically never used
+local config = require("config")
+local pos = config.start_pos -- standard cartesian coords, z coord is basically never used
 local z = 0 -- secret third coordinate, mostly unused
 local facing = 0 -- 0,1,2,3, clockwise
 local temp_pos

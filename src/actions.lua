@@ -175,7 +175,7 @@ local function prospectRegion()
     local xdim, ydim = 0, 0
 
     -- initial conditions (to be extra sure)
-    nav.moveTo(config.start_pos)
+    nav.moveTo(config.crop_start_pos)
     nav.faceDir(nav.WEST)
 
 
@@ -224,7 +224,7 @@ local function init()
     inv_c.equip()
 
     -- determine target crop 
-    nav.moveTo(config.start_pos)
+    nav.moveTo(config.crop_start_pos)
     local success = geo.setTarget()
 
     if success then

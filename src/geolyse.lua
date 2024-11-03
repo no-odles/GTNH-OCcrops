@@ -111,7 +111,7 @@ local function setTarget()
     else
         db.setTargetCrop(cname)
         local _, sc = score(scan)
-        db.setEntry(config.start_pos, sc)
+        db.setEntry(config.crop_start_pos, sc)
 
         return true
     end
