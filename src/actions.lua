@@ -43,6 +43,7 @@ local function placeCropstick(n)
     if robot.count() < n+1 then
         inv.restockSticks()
     end
+    robot.select(config.cropstick_slot)
 
     inv_c.equip()
 
