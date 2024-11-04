@@ -27,16 +27,12 @@ local function isFull()
 end
 
 local function dumpInv(dont_pause)
-    -- assumes we're in the right place if dont_pause is set to true and we're on the ground
-    local z = nav.getPos()[3]
-    local on_ground = z == -1
     if not dont_pause then
         nav.pause()
-    elseif not on_ground then
-        nav.moveTo(config.above_storage)
-        nav.moveRel({0,0,-1})
-        nav.faceDir(nav.EAST)
     end
+
+    nav.moveTo(config.above_storage)
+    nav.faceDir(nav.EAST)
   
     local success
     local seed_slot, extra_seed_slot, drop_slot = db.getSeedStoreSlot(), db.getExtraSeedStoreSlot(), db.getDropStoreSlot()
@@ -68,11 +64,7 @@ local function dumpInv(dont_pause)
 
     end
 
-    if dont_pause then
-        if not on_ground then
-            nav.moveRel({0,0,1})
-        end
-    else
+    if not dont_pause then
         nav.resume()
     end
     return success

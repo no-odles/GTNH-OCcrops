@@ -13,8 +13,8 @@ local config = {
     crop_start_pos={-1,1},
     start_pos={0,0,0},
     seed_store_side = sides.front,
-    extra_seed_store_side = sides.right,
-    drop_store_side = sides.right,
+    extra_seed_store_side = sides.up,
+    drop_store_side = sides.down,
     dump_when_restock=true
 
 }

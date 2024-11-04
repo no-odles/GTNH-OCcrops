@@ -27,7 +27,6 @@ local function isWeed(crop_scan)
     return crop_scan["crop:growth"] > config.max_growth or 
     crop_scan["crop:name"] == "weed" or
     crop_scan["crop:name"] == 'Grass' or
-    crop_scan["crop:growth"] > config.workingMaxGrowth or
     (crop_scan["crop:name"] == 'venomilia' and crop_scan["crop:growth"] > 7)
 end
 
@@ -117,5 +116,6 @@ return {
     isFarmable=isFarmable, 
     isWeed=isWeed, 
     score=score,
-    scanForWeeds=scanForWeeds
+    scanForWeeds=scanForWeeds,
+    setTarget=setTarget
 }
