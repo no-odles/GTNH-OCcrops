@@ -42,7 +42,7 @@ local function evalCrop(crop_scan)
         res_score = -res
     end
     
-    return math.min(0, growth + gain + res_score) -- -1 is empty, so literally any correct crop must be better than that
+    return math.max(0, growth + gain + res_score) -- -1 is empty, so literally any correct crop must be better than that
 end
 
 local function score(blockscan)
@@ -108,7 +108,7 @@ end
 
 return {
     -- functions
-    scandown=scanDown, 
+    scanDown=scanDown, 
     scanForward=scanForward, 
     isEmpty=isEmpty, 
     isWater=isWater,
