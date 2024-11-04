@@ -80,7 +80,7 @@ local function score(blockscan)
 end
 local function scanForWeeds()
     local scan = geo.analyze(sides.down)
-    return isWeed(scan)
+    return scanIsWeed(scan)
 end
 local function scanForward()
     local scan = geo.analyze(sides.forward)

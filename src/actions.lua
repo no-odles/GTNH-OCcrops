@@ -87,6 +87,7 @@ local function recursiveWeedIterator(prev, done, replace)
         local todo = utils.setDiff(adj, done)
 
         for i = 1,#todo do
+            nav.moveTo(todo[i])
             recursiveWeedIterator(pos, done)
         end
     end

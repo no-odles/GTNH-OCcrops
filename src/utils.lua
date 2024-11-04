@@ -40,6 +40,10 @@ local function elEq(a,b)
 end
 
 local function setDiff(a,b)
+    if #a == 0 or #b == 0 then
+        return a
+    end
+    
     local out = {}
     for k,v in pairs(a) do
         local in_b = false
