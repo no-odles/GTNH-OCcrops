@@ -85,7 +85,7 @@ local function restockSticks(dont_pause)
     if not dont_pause then
         nav.pause()
     end
-    nav.moveTo(config.stick_pos)
+    nav.moveTo(config.cstick_restock_pos)
     robot.select(config.cropstick_slot)
     inv_c.suckFromSlot(sides.down, 2) --drawer main slot is 2, pretty sure 1 is the upgrade slot
 
