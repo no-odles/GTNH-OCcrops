@@ -34,32 +34,38 @@ local function dumpInv(dont_pause)
     nav.moveTo(config.above_storage)
     nav.faceDir(nav.EAST)
   
-    local success
-    local seed_slot, extra_seed_slot, drop_slot = db.getSeedStoreSlot(), db.getExtraSeedStoreSlot(), db.getDropStoreSlot()
+    local success, store_slot
     for slot = config.first_storage_slot, config.inv_size do
         success = false
+        store_slot = 1
         robot.select(slot)
         local item = inv_c.getStackInInternalSlot()
         if item == nil then 
             success = true
+            break
+
         elseif item.name == "IC2:itemCropSeed" then
 
             if item["crop:name"] == db.getTargetCrop() then 
-                while not success and seed_slot <= inv_c.getInventorySize(config.seed_store_side) do
-                    success = inv_c.dropIntoSlot(config.seed_store_side, seed_slot)
-                    seed_slot = db.incSeedStoreSlot()
+                while not success and store_slot <= inv_c.getInventorySize(config.seed_store_side) do
+                    success = inv_c.dropIntoSlot(config.seed_store_side, store_slot)
+                    store_slot = store_slot + 1
                 end
             else
-                while not success and seed_slot <= inv_c.getInventorySize(config.extra_seed_store_side) do
-                    success = inv_c.dropIntoSlot(config.extra_seed_store_side, extra_seed_slot)
-                    extra_seed_slot = db.incExtraSeedStoreSlot()
+                while not success and store_slot <= inv_c.getInventorySize(config.extra_seed_store_side) do
+                    success = inv_c.dropIntoSlot(config.extra_seed_store_side, store_slot)
+                    store_slot = store_slot + 1
                 end
             end
         else
-            while not success and drop_slot <= inv_c.getInventorySize(config.drop_store_side) do
-                success = inv_c.dropIntoSlot(config.drop_store_side, seed_slot)
-                seed_slot = db.incDropStoreSlot()
+            while not success and store_slot <= inv_c.getInventorySize(config.drop_store_side) do
+                success = inv_c.dropIntoSlot(config.drop_store_side, store_slot)
+                store_slot = store_slot + 1
             end
+        end
+
+        if not success then
+            break
         end
 
     end
@@ -67,6 +73,7 @@ local function dumpInv(dont_pause)
     if not dont_pause then
         nav.resume()
     end
+    
     return success
 end
 
