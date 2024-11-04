@@ -74,7 +74,7 @@ local function weed(replace)
         placeCropstick(1)
     end
 
-    inv.pickUp()
+    -- inv.pickUp()
 end
 
 local function recursiveWeedIterator(prev, done, replace)
@@ -163,6 +163,7 @@ local function prospectNext()
     elseif geo.isFarmable(block) then
         if block == db.WEED then
             weed(true)
+            block, score = geo.scanDown()
         end
     else -- something else
         on_farm = false
@@ -193,9 +194,11 @@ local function prospectRegion()
         isfarm = prospectNext()
     end
 
+    print(string.format("xdim is %d", xdim))
     -- move to next row
     nav.moveRel({1,0,0})
     nav.faceDir(nav.NORTH)
+    isfarm = true
 
 
     while isfarm do
@@ -207,16 +210,19 @@ local function prospectRegion()
             nav.faceDir(nav.EAST)
         end
 
-        for _ = 1, xdim do
-            isfarm = prospectNext()
-        end
-        if not isfarm then
-            print("Farm isn't rectangular!")
-            return isfarm, -1, -1
+        if isfarm then
+            for _ = 1, xdim-1 do
+                isfarm = prospectNext()
+            end
+            if not isfarm then
+                print("Farm isn't rectangular!")
+                return isfarm, -1, -1
+            end
+            nav.faceDir(nav.NORTH)
         end
 
-        nav.faceDir(nav.UP)
     end
+    print(string.format("ydim is %d", ydim))
 
     return isfarm, xdim, ydim
 end
@@ -249,7 +255,7 @@ local function init()
     local success = geo.setTarget()
 
     if success then
-        print("Crop is %s", db.getTargetCrop)
+        print(string.format("Crop is %s", db.getTargetCrop()))
     else
         print("Invalid target plant! Make sure the lower right corner has the target plant in it.")
         return
