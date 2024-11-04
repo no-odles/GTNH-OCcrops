@@ -79,14 +79,16 @@ local function weed(replace)
         -- must be grass
         robot.swingDown()
 
-        if replace then
-            placeCropstick(1)
-        end
+        -- always want to replace in this case
+        placeCropstick(1)
+        
     end
 
     if replace and utils.dblCrop(nav.getPos()) then
         placeCropstick(1)
     end
+
+    db.setEmpty(nav.getPos())
 
     -- inv.pickUp()
 end

@@ -95,6 +95,9 @@ local function incDropStoreSlot()
     return drop_store_slot
 end
 
+local function setEmpty(key)
+    farmdb[{key[1], key[2]}] = EMPTY
+end
 local function getWorst()
     local worst = WATER
     local key
@@ -112,6 +115,21 @@ end
 
 local function getAdj(pos)
     local x,y = pos[1], pos[2]
+    local xi, yi = table.unpack(config.crop_start_pos)
+    local adj = {}
+    local newpos = {{x+1, y},{x-1,y},{x,y-1},{x, y+1}}
+
+    for i = 1,#newpos do
+        local xn, yn = table.unpack(newpos[i])
+        if math.abs(xi-xn) < nx and math.abs(yi-yn) < ny then
+            adj[#adj + 1 ] = newpos[i]
+        end
+    end
+    return adj
+end
+
+local function getAdjDBEntries(pos)
+    local x,y = pos[1], pos[2]
     local adj = {}
     local newpos = {{x+1, y},{x-1,y},{x,y-1},{x, y+1}}
 
@@ -125,7 +143,7 @@ end
 
 local function validLayout()
     local valid = false
-    local next_to_start = getAdj(config.crop_start_pos) -- just two cause it's in the corner
+    local next_to_start = getAdjDBEntries(config.crop_start_pos) -- just two cause it's in the corner
     local key
     local val
     for i = 1,#next_to_start do
@@ -167,8 +185,10 @@ return {
     incSeedStoreSlot=incSeedStoreSlot,
     incExtraSeedStoreSlot=incExtraSeedStoreSlot,
     incDropStoreSlot=incDropStoreSlot,
+    setEmpty=setEmpty,
     setTargetCrop=setTargetCrop,
     getWorst=getWorst, 
     validLayout=validLayout,
+    getAdjDBEntries=getAdjDBEntries,
     getAdj=getAdj
 }
