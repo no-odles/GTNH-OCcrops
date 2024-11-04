@@ -22,6 +22,8 @@ local function getPos()
     return {table.unpack(pos)}
 end
 
+
+
 local function carefulFly(dir)
     local success
     if dir == UP then
@@ -179,6 +181,11 @@ local function resume()
     temp_face[ltf] = nil
 end
 
+local function home()
+    moveTo(config.start_pos)
+    faceDir(NORTH)
+end
+
 
 return {
     UP=UP, 
@@ -195,5 +202,6 @@ return {
     flyN=flyN, 
     faceDir=faceDir,
     pause=pause,
-    resume=resume
+    resume=resume,
+    home=home
 }

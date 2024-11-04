@@ -271,7 +271,7 @@ end
 return {
     init=init, 
     recursiveWeed=recursiveWeed, 
-    weed,
+    weed=weed,
     charge=charge,
     till=till, 
     harvest,

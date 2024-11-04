@@ -23,12 +23,18 @@ local function isFarmable(block)
     return block == db.PLANT or block == db.CSTICK or block == db.WEED
 end
 
-local function isWeed(crop_scan)
+local function isWeed(block)
+    return block == db.WEED
+end
+
+local function scanIsWeed(crop_scan)
     return crop_scan["crop:growth"] > config.max_growth or 
     crop_scan["crop:name"] == "weed" or
     crop_scan["crop:name"] == 'Grass' or
     (crop_scan["crop:name"] == 'venomilia' and crop_scan["crop:growth"] > 7)
 end
+
+
 
 local function evalCrop(crop_scan)
     local growth = crop_scan["crop:growth"]
@@ -54,12 +60,10 @@ local function score(blockscan)
             -- empty / double cropstick
             return db.CSTICK, db.EMPTY
         elseif cname == db.getTargetCrop() then
-            if isWeed(blockscan) then
-                return db.WEED, db.WORST
-            else
-                return db.PLANT, evalCrop(blockscan)
-            end
-        else 
+            return db.PLANT, evalCrop(blockscan)
+        elseif scanIsWeed(blockscan) then
+            return db.WEED, db.WORST
+        else
             return db.PLANT, db.WRONG_PLANT
         end
     elseif name == "minecraft:air" then
