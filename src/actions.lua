@@ -139,7 +139,6 @@ local function prospectGround()
         return false, block, score
     end
         
-    end
 end
 
 local function prospectNext()
