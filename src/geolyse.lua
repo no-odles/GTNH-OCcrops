@@ -11,6 +11,10 @@ local function isEmpty(block)
     return block == db.AIR
 end
 
+local function isWater(block)
+    return block == db.WATER
+end
+
 local function isFarmTile(block)
     return block == db.TDIRT or block == db.WATER
 end
@@ -108,6 +112,7 @@ return {
     scandown=scanDown, 
     scanForward=scanForward, 
     isEmpty=isEmpty, 
+    isWater=isWater,
     isFarmTile=isFarmTile, 
     isFarmable=isFarmable, 
     isWeed=isWeed, 

@@ -20,9 +20,10 @@ local function charge()
     nav.resume()
 end
 
-local function till()
-    robot.useDown()
-end
+-- Not possible
+-- local function till()
+--     robot.useDown()
+-- end
 
 
 
@@ -36,6 +37,8 @@ local function placeCropstick(n)
         end
     end
 
+    local success = true
+
     robot.select(config.cropstick_slot)
     if robot.count() < n+1 then
         inv.restockSticks()
@@ -44,11 +47,12 @@ local function placeCropstick(n)
     inv_c.equip()
 
     for _=1,n do
-        robot.useDown()
+        local succ, status = robot.useDown()
+        success = succ and success
     end
 
     inv_c.equip() -- return spade to hand
-
+    return success
 end
 
 local function weed(replace)
@@ -109,16 +113,17 @@ local function recoverMissing()
     --will always leave the robot at z = 0
     local success
     local pos = nav.getPos()
-    if pos[2] == 0 then
+    if pos[3] == 0 then
         robot.swingDown()
-        nav.moveRel({0,0,-1})
+    else
+        nav.moveRel({0,0,1})
     end
-    till()
-    nav.moveRel({0,0,1})
-    placeCropstick()
 
-    local block, score = nav.scanDown()
-    if block == db.CSTICK then
+    local success = placeCropstick()
+
+    if success then
+        block, score = geo.scanDown()
+        db.setEntry(nav.getPos(), score)
         return true
     else
         return false
@@ -127,15 +132,13 @@ end
 
 local function prospectGround()
     local block, score = geo.scanDown()
-    if block == db.DIRT then
-        till()
-        block, score = geo.scanDown()
-    end
-
-    if geo.isFarmTile(block) then
+    if geo.isWater(block) then
         return true, block, score
     else
+        print("Found Non farmable block!")
         return false, block, score
+    end
+        
     end
 end
 
@@ -146,16 +149,19 @@ local function prospectNext()
     local block, score = geo.scanDown()
 
     if geo.isEmpty(block) then 
-        nav.flyN(1, nav.DOWN)
-        on_farm, block, score = prospectGround()
-        nav.flyN(1, nav.UP)
+        local success = placeCropstick()
 
-        if block == db.TDIRT then 
-            placeCropstick() --will fail if theres water, but nbd
+        if success then
+            block, score = geo.scanDown()
+        else
+            nav.flyN(1, nav.DOWN)
+            on_farm, block, score = prospectGround()
+            nav.flyN(1, nav.UP)
         end
+    
     elseif db.isFarmable(block) then
         if block == db.WEED then
-            weed()
+            weed(true)
         end
     else -- something else
         on_farm = false

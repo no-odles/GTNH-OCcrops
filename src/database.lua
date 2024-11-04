@@ -52,7 +52,7 @@ local function getDropStoreSlot()
 end
 
 local function setEntry(key, val)
-    farmdb[key] = val
+    farmdb[{key[1], key[2]}] = val
 end
 
 local function setBounds(bx, by)
