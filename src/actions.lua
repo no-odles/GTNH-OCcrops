@@ -81,8 +81,8 @@ local function recursiveWeedIterator(prev, done, replace)
     --not exactly optimal, but won't get stuck in loops
     if geo.scanForWeeds() then 
         weed(replace)
-        local adj = db.getAdj()
         local pos = nav.getPos()
+        local adj = db.getAdj(pos)
         done[#done + 1] = pos
         local todo = utils.setDiff(adj, done)
 
@@ -95,8 +95,8 @@ end
 
 local function recursiveWeed(replace)
     nav.pause()
-    local adj = db.getAdj()
     local pos = nav.getPos()
+    local adj = db.getAdj(pos)
     recursiveWeedIterator(pos, {}, replace)
 
     nav.resume()
