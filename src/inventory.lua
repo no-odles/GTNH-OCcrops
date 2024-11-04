@@ -7,6 +7,15 @@ local nav = require("navigation")
 local db = require("database")
 local config = require("config")
 
+local function halfFull()
+    local halfpoint = config.inv_size // 2
+    robot.select(config.inv_size)
+    if inv_c.getStackInInternalSlot() == nil then
+        return false
+    else
+        return  true
+    end
+end
 
 local function isFull()
     robot.select(config.inv_size)
@@ -85,11 +94,19 @@ local function restockSticks(dont_pause)
     if not dont_pause then
         nav.pause()
     end
+    local sticks = inv_c.getStackInInternalSlot(config.cropstick_slot)
+
+    if sticks == nil then
+        local num_sticks = 64
+    else
+        local num_sticks = 64 - sticks.size
+    end
+
     nav.moveTo(config.cstick_restock_pos)
     robot.select(config.cropstick_slot)
-    inv_c.suckFromSlot(sides.down, 2) --drawer main slot is 2, pretty sure 1 is the upgrade slot
+    inv_c.suckFromSlot(sides.down, 2, num_sticks) --drawer main slot is 2, pretty sure 1 is the upgrade slot
 
-    if config.dump_when_restock then
+    if config.dump_when_restock and halfFull() then
         dumpInv(true)
     end
 
@@ -103,5 +120,6 @@ return {
     dumpInv=dumpInv,
     pickUp=pickUp,
     restockSticks=restockSticks,
-    isFull=isFull
+    isFull=isFull,
+    halfFull=halfFull
 }

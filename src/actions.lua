@@ -225,9 +225,21 @@ local function init()
     -- restock inventory
     inv.restockSticks()
 
-
     robot.select(config.spade_slot)
-    inv_c.equip()
+    local spade_slot = inv_c.getStackInInternalSlot()
+    if spade_slot == nil then -- swap the spade back
+        inv_c.equip()
+        spade_slot = inv_c.getStackInInternalSlot()
+    end
+
+
+    if spade_slot.name =="berriespp:itemSpade" then
+        inv_c.equip()
+    else
+        print("No spade found!")
+        return false
+    end
+
 
     -- determine target crop 
     nav.moveTo(config.crop_start_pos)
