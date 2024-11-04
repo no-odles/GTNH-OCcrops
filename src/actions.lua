@@ -11,6 +11,23 @@ local geo = require("geolyse")
 local db = require("database")
 local inv = require("inventory")
 
+local function doAtEach(action, reverse)
+    local poslist = db.getPosList()
+    for i = 1, #poslist do
+        local pos
+        if reverse then
+            pos = poslist[#poslist + 1 - i]
+        else
+            pos = poslist[i]
+        end
+        nav.moveTo(pos)
+        action()
+
+    end
+
+end
+
+
 local function charge()
     nav.pause()
     nav.moveTo(config.start_pos)
@@ -61,9 +78,6 @@ local function weed(replace)
     if geo.scanForWeeds() then
         -- must be grass
         robot.swingDown()
-        robot.moveRel({0,0,-1})
-        till()
-        robot.moveRel({0,0,1})
 
         if replace then
             placeCropstick(1)
@@ -88,7 +102,7 @@ local function recursiveWeedIterator(prev, done, replace)
 
         for i = 1,#todo do
             nav.moveTo(todo[i])
-            recursiveWeedIterator(pos, done)
+            recursiveWeedIterator(pos, done, replace)
         end
     end
     nav.moveTo(prev)
@@ -97,7 +111,6 @@ end
 local function recursiveWeed(replace)
     nav.pause()
     local pos = nav.getPos()
-    local adj = db.getAdj(pos)
     recursiveWeedIterator(pos, {}, replace)
 
     nav.resume()
@@ -105,9 +118,25 @@ end
 
 
 
-local function harvest()
+local function harvest(replace)
     robot.useDown()
-    placeCropstick(1)
+    if replace then
+        placeCropstick()
+    end
+end
+
+local function plant(idx, score)
+    inv_c.select(idx)
+
+    if score == nil then
+        local item = inv_c.getStackInInternalSlot(idx)
+        score = geo.evalCrop(item)
+    end
+    inv_c.equip()
+    robot.useDown()
+    inv_c.equip()
+
+    db.setEntry(nav.getPos(), score)
 end
 
 
@@ -275,13 +304,44 @@ local function init()
     return valid_farm
 end
 
+local function clean()
+    nav.moveTo(config.crop_start_pos)
+
+    local function clean_section()
+        local pos = nav.getPos()
+        if utils.dblCrop(pos) then
+            local block, score, is_grown = geo.scanCrop()
+            if is_grown then
+                harvest(false)
+            else
+                robot.useDown() -- might as well try
+                robot.swingDown() -- break the cropsticks
+            end
+            
+        else
+            local block, score = geo.scanDown()
+            if geo.isEmptyCropstick(block) then
+                robot.swingDown()
+            end
+        end
+    end
+    doAtEach(clean_section)
+
+    inv.dumpInv(true)
+    nav.home()
+end
+
+
 return {
     init=init, 
     recursiveWeed=recursiveWeed, 
     weed=weed,
     charge=charge,
-    till=till, 
-    harvest,
+    -- till=till, 
+    harvest=harvest,
+    plant=plant,
     placeCropstick=placeCropstick, 
-    recoverMissing=recoverMissing
+    recoverMissing=recoverMissing,
+    clean=clean,
+    doAtEach=doAtEach
 }

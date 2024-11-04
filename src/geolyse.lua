@@ -19,25 +19,37 @@ local function isFarmTile(block)
     return block == db.TDIRT or block == db.WATER
 end
 
+local function isEmptyCropstick(block)
+    return block == db.CSTICK
+end
+
 local function isFarmable(block)
     return block == db.PLANT or block == db.CSTICK or block == db.WEED
+end
+
+local function isPlant(block)
+    return block == db.PLANT or block == db.WEED
 end
 
 local function isWeed(block)
     return block == db.WEED
 end
 
-local function scanIsWeed(crop_scan)
+local function scanIsGrown(scan)
+    return scan["crop:size"] == scan["crop:maxSize"]
+end
+
+local function scanIsWeed(scan)
     if scan.name == "IC2:blockCrop" and not(scan["crop:name"] == nil) then
-        return crop_scan["crop:growth"] > config.max_growth or 
-        crop_scan["crop:name"] == "weed" or
-        crop_scan["crop:name"] == 'Grass' or
-        (crop_scan["crop:name"] == 'venomilia' and crop_scan["crop:growth"] > 7)
+        return scan["crop:growth"] > config.max_growth or 
+        scan["crop:name"] == "weed" or
+        scan["crop:name"] == 'Grass' or
+        (scan["crop:name"] == 'venomilia' and scan["crop:growth"] > 7)
     elseif scan.name == "minecraft:tallgrass" then
         return true
     else 
         return false
-    return 
+    end
 end
 
 
@@ -90,6 +102,8 @@ local function scanForWeeds()
     local scan = geo.analyze(sides.down)
     return scanIsWeed(scan)
 end
+
+
 local function scanForward()
     local scan = geo.analyze(sides.forward)
     return score(scan)
@@ -98,6 +112,18 @@ end
 local function scanDown()
     local scan = geo.analyze(sides.down)
     return score(scan)
+end
+
+local function scanCrop()
+    local scan = geo.analyze(sides.down)
+    local block, bscore = score(scan)
+
+    if isPlant(block) then
+        return block, bscore, scanIsGrown(scan), scanIsWeed(scan)
+    end
+
+    return block, bscore, nil, nil
+
 end
 
 
@@ -124,10 +150,14 @@ return {
     scanForward=scanForward, 
     isEmpty=isEmpty, 
     isWater=isWater,
+    isEmptyCropstick=isEmptyCropstick,
     isFarmTile=isFarmTile, 
     isFarmable=isFarmable, 
+    isPlant=isPlant,
     isWeed=isWeed, 
     score=score,
+    evalCrop=evalCrop,
     scanForWeeds=scanForWeeds,
+    scanCrop=scanCrop,
     setTarget=setTarget
 }

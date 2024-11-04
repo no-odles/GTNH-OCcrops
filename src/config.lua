@@ -15,7 +15,8 @@ local config = {
     seed_store_side = sides.front,
     extra_seed_store_side = sides.up,
     drop_store_side = sides.down,
-    dump_when_restock=true
+    dump_when_restock=true,
+    score_goal = 31 + 23 + 2
 
 }
 

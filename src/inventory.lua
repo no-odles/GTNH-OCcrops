@@ -6,6 +6,7 @@ local inv_c = component.inventory_controller
 local nav = require("navigation")
 local db = require("database")
 local config = require("config")
+local geo = require("geolyse")
 
 local function halfFull()
     local halfpoint = config.inv_size // 2
@@ -18,7 +19,7 @@ local function halfFull()
 end
 
 local function isFull()
-    robot.select(config.inv_size)
+    robot.select(config.inv_size-3)  -- the -3 is for extra safety
     if inv_c.getStackInInternalSlot() == nil then
         return false
     else
@@ -38,8 +39,7 @@ local function dumpInv(dont_pause)
     for slot = config.first_storage_slot, config.inv_size do
         success = false
         store_slot = 1
-        robot.select(slot)
-        local item = inv_c.getStackInInternalSlot()
+        local item = inv_c.getStackInInternalSlot(slot)
         if item == nil then 
             success = true
             break
@@ -118,10 +118,28 @@ local function restockSticks(dont_pause)
 end
 
 
+local function findSeed(score) 
+    local success = false
+    for slot = config.first_storage_slot, config.inv_size do
+        local item = inv_c.getStackInInternalSlot(slot)
+        if item == nil then 
+            break
+        elseif item["crop:name"] == db.getTargetCrop() then
+            if geo.evalCrop(item) == score then
+                success = true
+                return success, slot
+            end
+        end
+    end
+    return success, -1
+end
+
+
 return {
     dumpInv=dumpInv,
     pickUp=pickUp,
     restockSticks=restockSticks,
     isFull=isFull,
-    halfFull=halfFull
+    halfFull=halfFull,
+    findSeed=findSeed
 }

@@ -25,6 +25,7 @@ local target_crop
 local seed_store_slot=1
 local extra_seed_store_slot = 1
 local drop_store_slot=1
+local poslist = {}
 
 local function getDB()
     return farmdb
@@ -54,12 +55,25 @@ local function getDropStoreSlot()
     return drop_store_slot
 end
 
+local function getPosList()
+    return poslist
+end
+
 local function setEntry(key, val)
     farmdb[{key[1], key[2]}] = val
 end
 
 local function setBounds(bx, by)
     nx, ny = bx, by
+    -- generate poslist
+    if # poslist == 0 then
+        for yi = 1, ny do
+            for xi = 1,nx do
+                poslist[#poslist + 1] = {xi,yi}
+            end
+
+        end
+    end
 end
 
 local function setTargetCrop(crop)
@@ -93,7 +107,7 @@ local function getWorst()
         end
     end
 
-    return key
+    return key, worst
 end
 
 local function getAdj(pos)
@@ -146,6 +160,7 @@ return {
     getSeedStoreSlot=getSeedStoreSlot,
     getExtraSeedStoreSlot=getExtraSeedStoreSlot,
     getDropStoreSlot=getDropStoreSlot,
+    getPosList=getPosList,
     getTargetCrop=getTargetCrop,
     setBounds=setBounds, 
     setEntry=setEntry, 
