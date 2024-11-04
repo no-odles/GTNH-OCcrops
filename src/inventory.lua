@@ -73,7 +73,7 @@ local function dumpInv(dont_pause)
     if not dont_pause then
         nav.resume()
     end
-    
+
     return success
 end
 
@@ -101,12 +101,15 @@ local function restockSticks(dont_pause)
         local num_sticks = 64 - sticks.size
     end
 
-    nav.moveTo(config.cstick_restock_pos)
-    robot.select(config.cropstick_slot)
-    inv_c.suckFromSlot(sides.down, 2, num_sticks) --drawer main slot is 2, pretty sure 1 is the upgrade slot
+    if num_sticks > 0 then
+        nav.moveTo(config.cstick_restock_pos)
+        robot.select(config.cropstick_slot)
+        inv_c.suckFromSlot(sides.down, 2, num_sticks) --drawer main slot is 2, pretty sure 1 is the upgrade slot
+        
 
-    if config.dump_when_restock and halfFull() then
-        dumpInv(true)
+        if config.dump_when_restock and halfFull() then
+            dumpInv(true)
+        end
     end
 
     if not dont_pause then

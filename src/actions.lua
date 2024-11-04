@@ -159,7 +159,7 @@ local function prospectNext()
             nav.flyN(1, nav.UP)
         end
     
-    elseif db.isFarmable(block) then
+    elseif geo.isFarmable(block) then
         if block == db.WEED then
             weed(true)
         end
