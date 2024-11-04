@@ -94,11 +94,11 @@ local function restockSticks(dont_pause)
         nav.pause()
     end
     local sticks = inv_c.getStackInInternalSlot(config.cropstick_slot)
-
+    local num_sticks
     if sticks == nil then
-        local num_sticks = 64
+        num_sticks = 64
     else
-        local num_sticks = 64 - sticks.size
+        num_sticks = 64 - sticks.size
     end
 
     if num_sticks > 0 then

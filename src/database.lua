@@ -110,10 +110,11 @@ local function validLayout()
     local valid = false
     local next_to_start = {{3,1}, {1,3}} -- just two cause it's in the corner
     local key
+    local val
     for i = 1,#next_to_start do
         key = next_to_start[i]
-        valid = valid or farmdb[key] >= 0
-        valid = valid or farmdb[key] == WRONG_PLANT
+        val = farmdb[key]
+        valid = valid or  (val ~= nil and (val >= 0 or val == WRONG_PLANT))
     end
 
     return valid

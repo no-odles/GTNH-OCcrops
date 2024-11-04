@@ -178,7 +178,7 @@ end
 
 local function prospectRegion()
     -- Find out the dimensions of the farm
-    local isfarm, done_scan, valid_farm = true, false, true
+    local isfarm, done_scan = true, false
     local xdim, ydim = 0, 0
 
     -- initial conditions (to be extra sure)
@@ -193,11 +193,12 @@ local function prospectRegion()
     end
 
     -- move to next row
-    nav.moveRel({-1,0,0})
+    nav.moveRel({1,0,0})
     nav.faceDir(nav.NORTH)
 
 
-    while not prospectNext() do
+    while isfarm do
+        isfarm = prospectNext()
         ydim = ydim + 1 
         if ydim % 2 == 0 then
             nav.faceDir(nav.WEST)
@@ -206,17 +207,17 @@ local function prospectRegion()
         end
 
         for _ = 1, xdim do
-            valid_farm = valid_farm and prospectNext()
+            isfarm = prospectNext()
         end
-        if not valid_farm then
+        if not isfarm then
             print("Farm isn't rectangular!")
-            return valid_farm, -1, -1
+            return isfarm, -1, -1
         end
 
         nav.faceDir(nav.UP)
     end
 
-    return valid_farm, xdim, ydim
+    return isfarm, xdim, ydim
 end
 
 local function init()
