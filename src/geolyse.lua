@@ -28,10 +28,16 @@ local function isWeed(block)
 end
 
 local function scanIsWeed(crop_scan)
-    return crop_scan["crop:growth"] > config.max_growth or 
-    crop_scan["crop:name"] == "weed" or
-    crop_scan["crop:name"] == 'Grass' or
-    (crop_scan["crop:name"] == 'venomilia' and crop_scan["crop:growth"] > 7)
+    if scan.name == "IC2:blockCrop" and not(scan["crop:name"] == nil) then
+        return crop_scan["crop:growth"] > config.max_growth or 
+        crop_scan["crop:name"] == "weed" or
+        crop_scan["crop:name"] == 'Grass' or
+        (crop_scan["crop:name"] == 'venomilia' and crop_scan["crop:growth"] > 7)
+    elseif scan.name == "minecraft:tallgrass" then
+        return true
+    else 
+        return false
+    return 
 end
 
 
@@ -68,6 +74,8 @@ local function score(blockscan)
         end
     elseif name == "minecraft:air" then
         return db.AIR, db.EMPTY
+    elseif name == "minecraft:tallgrass" then
+        return db.WEED, db.WORST
     elseif name == "minecraft:water" then
         return db.BWATER, db.WATER
     elseif name == "minecraft:dirt" then

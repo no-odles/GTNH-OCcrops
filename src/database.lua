@@ -1,3 +1,6 @@
+local config = require("config")
+
+
 -- Block Enums
 local AIR = 0
 local DIRT = 1
@@ -108,7 +111,7 @@ end
 
 local function validLayout()
     local valid = false
-    local next_to_start = {{3,1}, {1,3}} -- just two cause it's in the corner
+    local next_to_start = getAdj(config.crop_start_pos) -- just two cause it's in the corner
     local key
     local val
     for i = 1,#next_to_start do
