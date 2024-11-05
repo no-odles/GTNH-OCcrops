@@ -84,11 +84,13 @@ local function weed(replace)
         
     end
 
-    if replace and utils.dblCrop(nav.getPos()) then
-        placeCropstick(1)
+    if utils.dblCrop(nav.getPos()) then
+        if replace then
+            placeCropstick(1)
+        end
+    else
+        db.setEmpty(nav.getPos())
     end
-
-    db.setEmpty(nav.getPos())
 
     -- inv.pickUp()
 end
@@ -107,7 +109,7 @@ local function recursiveWeedIterator(prev, done, replace)
             recursiveWeedIterator(pos, done, replace)
         end
     end
-    nav.moveTo(prev)
+    -- nav.moveTo(prev)
 end
 
 local function recursiveWeed(replace)
@@ -128,12 +130,13 @@ local function harvest(replace)
 end
 
 local function plant(idx, score)
-    inv_c.select(idx)
 
     if score == nil then
         local item = inv_c.getStackInInternalSlot(idx)
         score = geo.evalCrop(item)
     end
+    inv_c.select(idx)
+
     inv_c.equip()
     robot.useDown()
     inv_c.equip()
@@ -142,26 +145,26 @@ local function plant(idx, score)
 end
 
 
-local function recoverMissing()
-    --will always leave the robot at z = 0
-    local success
-    local pos = nav.getPos()
-    if pos[3] == 0 then
-        robot.swingDown()
-    else
-        nav.moveRel({0,0,1})
-    end
+-- local function recoverMissing()
+--     --will always leave the robot at z = 0
+--     local success
+--     local pos = nav.getPos()
+--     if pos[3] == 0 then
+--         robot.swingDown()
+--     else
+--         nav.moveRel({0,0,1})
+--     end
 
-    local success = placeCropstick()
+--     local success = placeCropstick()
 
-    if success then
-        block, score = geo.scanDown()
-        db.setEntry(nav.getPos(), score)
-        return true
-    else
-        return false
-    end
-end
+--     if success then
+--         local block, score = geo.scanDown()
+--         db.setEntry(nav.getPos(), score)
+--         return true
+--     else
+--         return false
+--     end
+-- end
 
 local function prospectGround()
     local block, score = geo.scanDown()
@@ -343,7 +346,7 @@ return {
     harvest=harvest,
     plant=plant,
     placeCropstick=placeCropstick, 
-    recoverMissing=recoverMissing,
+    -- recoverMissing=recoverMissing,
     clean=clean,
     doAtEach=doAtEach
 }
