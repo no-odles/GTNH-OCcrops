@@ -79,10 +79,10 @@ local function evalCrop(crop_scan)
         scan = crop_scan
     end
 
-    if scan.crop.res <= config.resistance_target then
-        res_score = scan.crop.res
+    if scan.crop.resistance <= config.resistance_target then
+        res_score = scan.crop.resistance
     else
-        res_score = -scan.crop.res
+        res_score = -scan.crop.resistance
     end
     
     return math.max(0, scan.crop.growth + scan.crop.gain + res_score) -- -1 is empty, so literally any correct crop must be better than that

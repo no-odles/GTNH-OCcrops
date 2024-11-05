@@ -1,4 +1,5 @@
 local robot = require("robot")
+local sides = require("sides")
 local component = require("component")
 local inv_c = component.inventory_controller
 local computer = require("computer")
@@ -118,7 +119,7 @@ end
 
 
 local function harvest(replace)
-    robot.useDown()
+    robot.swingDown(sides.front, true)
     if replace then
         placeCropstick()
     end

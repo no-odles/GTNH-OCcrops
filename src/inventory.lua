@@ -121,15 +121,22 @@ end
 
 local function findSeed(score) 
     local success = false
+    local count = 0 -- how many in a row to allow
     for slot = config.first_storage_slot, config.inv_size do
         local item = inv_c.getStackInInternalSlot(slot)
-        if item == nil then 
-            break
-        elseif item["crop:name"] == db.getTargetCrop() then
+        if item == nil then
+            count = count + 1
+            if count == 5 then
+                break
+            end
+        elseif item.crop ~= nil and item.crop.name == db.getTargetCrop() then
+            count = 0
             if geo.evalCrop(item) == score then
                 success = true
                 return success, slot
             end
+        else
+            count = 0
         end
     end
     return success, -1
