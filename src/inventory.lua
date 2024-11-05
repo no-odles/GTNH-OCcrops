@@ -28,6 +28,7 @@ local function isFull()
 end
 
 local function dumpInv(dont_pause)
+    print("Emptying inventory!")
     if not dont_pause then
         nav.pause()
     end
@@ -97,6 +98,7 @@ local function pickUp()
 end
 
 local function restockSticks(dont_pause)
+    print("Refilling Cropsticks!")
     if not dont_pause then
         nav.pause()
     end

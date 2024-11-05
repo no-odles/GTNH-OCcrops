@@ -119,7 +119,7 @@ end
 
 
 local function harvest(replace)
-    robot.swingDown(sides.front, true)
+    robot.swingDown(nil, true)
     if replace then
         placeCropstick()
     end
@@ -268,15 +268,16 @@ local function init()
     -- restock inventory
     inv.restockSticks(true)
 
-    robot.select(config.spade_slot)
-    local spade_slot = inv_c.getStackInInternalSlot()
+    local spade_slot = inv_c.getStackInInternalSlot(config.spade_slot)
     if spade_slot == nil then -- swap the spade back
+        robot.select(config.spade_slot)
         inv_c.equip()
-        spade_slot = inv_c.getStackInInternalSlot()
+        spade_slot = inv_c.getStackInInternalSlot(config.spade_slot)
     end
 
 
     if not(spade_slot == nil) and spade_slot.name =="berriespp:itemSpade" then
+        robot.select(config.spade_slot)
         inv_c.equip()
     else
         print("No spade found!")
