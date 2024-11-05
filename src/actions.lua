@@ -95,28 +95,26 @@ local function weed(replace)
     -- inv.pickUp()
 end
 
-local function recursiveWeedIterator(prev, done, replace)
-    --not exactly optimal, but won't get stuck in loops
-    local pos = nav.getPos()
-    done[#done + 1] = pos
 
-    if geo.scanForWeeds() then 
-        weed(replace)
-        local adj = db.getAdj(pos)
-        local todo = utils.setDiff(adj, done)
-
-        for i = 1,#todo do
-            nav.moveTo(todo[i])
-            recursiveWeedIterator(pos, done, replace)
-        end
-    end
-    -- nav.moveTo(prev)
-end
-
-local function recursiveWeed(replace)
+local function iterativeWeed(replace) -- fun but ultimately silly
     nav.pause()
     local pos = nav.getPos()
-    recursiveWeedIterator(pos, {}, replace)
+    local done, todo = {}, {pos}
+    while #todo > 0 do 
+        pos = todo[#todo]
+        todo[#todo] = nil
+        done[#done + 1] = pos
+
+        nav.moveTo(pos)
+        if geo.scanForWeeds() then
+            weed(replace)
+            local adj = utils.setDiff(db.getAdj(pos), done)   
+            for i = 1,#adj do
+                todo[#todo + 1] = adj[i]
+            end
+        end
+
+    end
 
     nav.resume()
 end
@@ -340,7 +338,7 @@ end
 
 return {
     init=init, 
-    recursiveWeed=recursiveWeed, 
+    iterativeWeed=iterativeWeed,
     weed=weed,
     charge=charge,
     -- till=till, 

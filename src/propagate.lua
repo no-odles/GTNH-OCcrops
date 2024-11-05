@@ -43,7 +43,7 @@ local function propagate()
         local block, score, is_grown, is_weed = geo.scanCrop()
 
         if is_weed then
-            act.recursiveWeed(true)
+            act.weed(true)
         elseif utils.dblCrop(pos) then
             if is_grown then -- non crop blocks will never be grown
                 if inv.isFull() then
