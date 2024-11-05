@@ -19,8 +19,8 @@ local WATER = 111 -- crop will never be replaced (Max score should be 93 no matt
 
 
 local farmdb = {}
-local nx = {}
-local ny = {}
+local nx = -1
+local ny = -1
 local target_crop
 local seed_store_slot=1
 local extra_seed_store_slot = 1
@@ -65,11 +65,13 @@ end
 
 local function setBounds(bx, by)
     nx, ny = bx, by
+    local x0, y0 = table.unpack(config.crop_start_pos)
+
     -- generate poslist
-    if # poslist == 0 then
-        for yi = 1, ny do
-            for xi = 1,nx do
-                poslist[#poslist + 1] = {xi,yi}
+    if #poslist == 0 then
+        for yi = 0, ny-1 do
+            for xi = 0,-(nx-1),-1 do
+                poslist[#poslist + 1] = {x0+xi,y0+yi}
             end
 
         end
