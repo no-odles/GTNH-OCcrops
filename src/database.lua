@@ -178,6 +178,13 @@ local function validLayout()
     return valid
 end
 
+local function resetDB()
+    farmdb = {}
+    nx, ny = -1, -1
+    target_crop = nil
+    poslist = {}
+end
+
 return {
     -- BLOCK NAMES
     AIR=AIR,
@@ -215,5 +222,6 @@ return {
     getWorst=getWorst, 
     validLayout=validLayout,
     getAdjSingleCrops=getAdjSingleCrops,
-    getAdj=getAdj
+    getAdj=getAdj,
+    resetDB=resetDB
 }
