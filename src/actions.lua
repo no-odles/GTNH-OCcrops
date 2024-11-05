@@ -130,7 +130,7 @@ local function plant(idx, score)
         local item = inv_c.getStackInInternalSlot(idx)
         score = geo.evalCrop(item)
     end
-    inv_c.select(idx)
+    robot.select(idx)
 
     inv_c.equip()
     robot.useDown()
@@ -325,7 +325,7 @@ local function clean()
             
         else
             local block, score = geo.scanDown()
-            if geo.isEmptyCropstick(block) then
+            if geo.isEmptyCropstick(block)  or geo.isWeed(block) then
                 robot.swingDown()
             end
         end

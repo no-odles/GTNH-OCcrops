@@ -45,7 +45,7 @@ local function dumpInv(dont_pause)
             break
 
         elseif item.name == "IC2:itemCropSeed" then
-
+            robot.select(slot)
             if item["crop:name"] == db.getTargetCrop() then 
                 while not success and store_slot <= inv_c.getInventorySize(config.seed_store_side) do
                     success = inv_c.dropIntoSlot(config.seed_store_side, store_slot)
@@ -58,6 +58,7 @@ local function dumpInv(dont_pause)
                 end
             end
         else
+            robot.select(slot)
             while not success and store_slot <= inv_c.getInventorySize(config.drop_store_side) do
                 success = inv_c.dropIntoSlot(config.drop_store_side, store_slot)
                 store_slot = store_slot + 1

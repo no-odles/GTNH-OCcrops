@@ -35,6 +35,22 @@ local function isWeed(block)
     return block == db.WEED
 end
 
+local function parseScan(raw_scan)
+    local scan = {}
+    scan.name = raw_scan.name
+    if not(scan["crop:name"] == nil) then
+        scan.crop = {}
+        scan.crop.name = raw_scan["crop:name"]
+        scan.crop.growth = raw_scan["crop:growth"]
+        scan.crop.gain = raw_scan["crop:gain"]
+        scan.crop.resistance = raw_scan["crop:resistance"]
+        scan.crop.size = raw_scan["crop:size"]
+        scan.crop.maxSize = raw_scan["crop:maxSize"]
+    end
+
+
+end
+
 local function scanIsGrown(scan)
     return scan["crop:size"] == scan["crop:maxSize"]
 end
@@ -44,7 +60,7 @@ local function scanIsWeed(scan)
         return scan["crop:growth"] > config.max_growth or 
         scan["crop:name"] == "weed" or
         scan["crop:name"] == 'Grass' or
-        (scan["crop:name"] == 'venomilia' and scan["crop:growth"] > 7)
+        (scan["crop:name"] == 'venomilia' and scan["crop:size"] > 7)
     elseif scan.name == "minecraft:tallgrass" then
         return true
     else 
@@ -55,18 +71,21 @@ end
 
 
 local function evalCrop(crop_scan)
-    local growth = crop_scan["crop:growth"]
-    local gain = crop_scan["crop:gain"]
-    local res = crop_scan["crop:resistance"]
-    local res_score
-
-    if res <= config.resistance_target then
-        res_score = res
+    -- needs to handle both geolyzer output and itemStack objects
+    local res_score, scan
+    if crop_scan.crop == nil then
+        scan = parseScan(crop_scan)
     else
-        res_score = -res
+        scan = crop_scan
+    end
+
+    if scan.crop.res <= config.resistance_target then
+        res_score = scan.crop.res
+    else
+        res_score = -scan.crop.res
     end
     
-    return math.max(0, growth + gain + res_score) -- -1 is empty, so literally any correct crop must be better than that
+    return math.max(0, scan.crop.growth + scan.crop.gain + res_score) -- -1 is empty, so literally any correct crop must be better than that
 end
 
 local function score(blockscan)
@@ -141,6 +160,8 @@ local function setTarget()
     end
     
 end
+
+
 
 
 
