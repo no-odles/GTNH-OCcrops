@@ -174,9 +174,9 @@ end
 
 local function prospectNext()
     -- assume we start at z = 0
+    nav.moveForward()
     local pos = nav.getPos()
     local on_farm = true
-    nav.moveForward()
     local block, score = geo.scanDown()
 
     if geo.isEmpty(block) then 
