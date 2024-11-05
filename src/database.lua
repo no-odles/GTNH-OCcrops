@@ -1,4 +1,4 @@
-local config = require("config")
+-- local config = require("config")
 
 
 -- Block Enums
@@ -100,14 +100,14 @@ end
 local function getWorst()
     local worst = WATER
     local key
-    for i = 1,nx do
-        for j = 1,ny do 
-            local entry = farmdb[i][j]
-            if entry < worst then
-                key = {i,j}
-                worst = entry
-            end
+    for i = 1, #poslist do
+        local pos = poslist[i]
+        local entry = getEntry(pos)
+        if entry < worst then
+            key = pos
+            worst = entry
         end
+        
     end
 
     return key, worst
@@ -129,7 +129,7 @@ local function getAdj(pos)
     return adj
 end
 
-local function getAdjDBEntries(pos)
+local function getAdjSingleCrops(pos)
     local x,y = pos[1], pos[2]
     local adj = {}
     local newpos = {{x+2, y},{x-2,y},{x,y-2},{x, y+2}}
@@ -166,7 +166,7 @@ end
 
 local function validLayout()
     local valid = false
-    local next_to_start = getAdjDBEntries(config.crop_start_pos) -- just two cause it's in the corner
+    local next_to_start = getAdjSingleCrops(config.crop_start_pos) -- just two cause it's in the corner
     local key
     local val
     for i = 1,#next_to_start do
@@ -203,6 +203,7 @@ return {
     getDropStoreSlot=getDropStoreSlot,
     getPosList=getPosList,
     getTargetCrop=getTargetCrop,
+
     setBounds=setBounds, 
     setEntry=setEntry, 
     incSeedStoreSlot=incSeedStoreSlot,
@@ -210,8 +211,9 @@ return {
     incDropStoreSlot=incDropStoreSlot,
     setEmpty=setEmpty,
     setTargetCrop=setTargetCrop,
+    
     getWorst=getWorst, 
     validLayout=validLayout,
-    getAdjDBEntries=getAdjDBEntries,
+    getAdjSingleCrops=getAdjSingleCrops,
     getAdj=getAdj
 }

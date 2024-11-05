@@ -84,14 +84,10 @@ local function weed(replace)
         
     end
 
-    if utils.dblCrop(nav.getPos()) then
-        if replace then
-            placeCropstick(1)
-        end
-    else
-        db.setEmpty(nav.getPos())
+    if utils.dblCrop(nav.getPos()) and replace then
+        placeCropstick(1)
     end
-
+    db.setEmpty(nav.getPos())
     -- inv.pickUp()
 end
 
@@ -178,6 +174,7 @@ end
 
 local function prospectNext()
     -- assume we start at z = 0
+    local pos = nav.getPos()
     local on_farm = true
     nav.moveForward()
     local block, score = geo.scanDown()
@@ -198,12 +195,16 @@ local function prospectNext()
             weed(true)
             block, score = geo.scanDown()
         end
+
+        if geo.isEmptyCropstick(block) and utils.dblCrop(pos) then
+            placeCropstick(1)
+        end
     else -- something else
         on_farm = false
     end
 
     if on_farm then
-        local x, y = nav.getPos()
+        local x, y = table.unpack(pos)
         db.setEntry({x,y}, score)
         return true
     else
