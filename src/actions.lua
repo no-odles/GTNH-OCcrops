@@ -195,10 +195,9 @@ local function prospectNext()
         if block == db.WEED then
             weed(true)
             block, score = geo.scanDown()
-        end
-
-        if geo.isEmptyCropstick(block) and utils.dblCrop(pos) then
-            placeCropstick(1)
+        elseif geo.isEmptyCropstick(block) then
+            robot.swingDown() -- cstick may be wrong
+            placeCropstick()
         end
     else -- something else
         on_farm = false
@@ -277,7 +276,7 @@ local function init()
     end
 
 
-    if spade_slot.name =="berriespp:itemSpade" then
+    if not(spade_slot == nil) and spade_slot.name =="berriespp:itemSpade" then
         inv_c.equip()
     else
         print("No spade found!")

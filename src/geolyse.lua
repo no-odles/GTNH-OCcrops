@@ -38,7 +38,7 @@ end
 local function parseScan(raw_scan)
     local scan = {}
     scan.name = raw_scan.name
-    if not(scan["crop:name"] == nil) then
+    if not(raw_scan["crop:name"] == nil) then
         scan.crop = {}
         scan.crop.name = raw_scan["crop:name"]
         scan.crop.growth = raw_scan["crop:growth"]
@@ -48,7 +48,7 @@ local function parseScan(raw_scan)
         scan.crop.maxSize = raw_scan["crop:maxSize"]
     end
 
-
+    return scan
 end
 
 local function scanIsGrown(scan)

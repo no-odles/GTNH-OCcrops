@@ -20,15 +20,17 @@ local function check_and_replace(score)
     if score > worst then
         local found, idx = inv.findSeed(score) 
         if not found then
-            print("Lost a seed!") -- BAD
-        else 
+            print("Lost a seed :(") -- :(
+        else
+            print(string.format("Replacing Crop at {%d, %d} score (%d -> %d)", worst_pos[1], worst_pos[2], worst, score))
+
             nav.moveTo(worst_pos)
-            local block2, score2, is_grown2 = geo.scanCrop()
+            local block2, score2, is_grown2, is_weed2 = geo.scanCrop()
             act.harvest(true)
 
             act.plant(idx, score)
 
-            worst_pos, worst = db.getWorst()
+            worst_pos, worst = db.getWorstCrop()
             check_and_replace(score2)
         end
 
@@ -49,9 +51,8 @@ local function propagate()
                 if inv.isFull() then
                     looping = looping and inv.dumpInv()
                 end
-                if harvesting then
-                    act.harvest(true)
-                else
+                act.harvest(true)
+                if not harvesting then
                     nav.pause()
                     check_and_replace(score)
                     nav.resume()
@@ -72,7 +73,7 @@ local function main()
     if not valid then
         return
     end
-    worst_pos, worst = db.getWorst()
+    worst_pos, worst = db.getWorstCrop()
     while propagate() do
         if not inv.dumpInv() then
             print("Full inventory!")

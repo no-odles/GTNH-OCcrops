@@ -1,4 +1,5 @@
 local config = require("config")
+local utils = require("utils")
 
 
 -- Block Enums
@@ -97,15 +98,17 @@ local function setEmpty(key)
     end
     farmdb[i][j] = EMPTY
 end
-local function getWorst()
+local function getWorstCrop()
     local worst = WATER
     local key
     for i = 1, #poslist do
         local pos = poslist[i]
-        local entry = getEntry(pos)
-        if entry < worst then
-            key = pos
-            worst = entry
+        if not utils.dblCrop(pos) then
+            local entry = getEntry(pos)
+            if entry < worst then
+                key = pos
+                worst = entry
+            end
         end
         
     end
@@ -219,7 +222,7 @@ return {
     setEmpty=setEmpty,
     setTargetCrop=setTargetCrop,
 
-    getWorst=getWorst, 
+    getWorstCrop=getWorstCrop, 
     validLayout=validLayout,
     getAdjSingleCrops=getAdjSingleCrops,
     getAdj=getAdj,
