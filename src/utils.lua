@@ -1,5 +1,14 @@
+local computer = require("computer") 
 local function isDone()
 
+end
+
+local function needsCharge()
+    if computer.energy() / computer.maxEnergy() < 0.5 then
+        return true
+    else
+        return false
+    end
 end
 
 local function sgn(x)
@@ -70,5 +79,6 @@ return {
     dblCrop=dblCrop,
     setDiff=setDiff,
     elEq=elEq,
-    copy=copy
+    copy=copy,
+    needsCharge=needsCharge
 }

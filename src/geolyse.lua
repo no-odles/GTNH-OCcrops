@@ -104,13 +104,13 @@ local function score(blockscan)
             return db.PLANT, db.WRONG_PLANT
         end
     elseif name == "minecraft:air" then
-        return db.AIR, db.EMPTY
+        return db.AIR, db.WATER
     elseif name == "minecraft:tallgrass" then
         return db.WEED, db.WORST
     elseif name == "minecraft:water" then
         return db.BWATER, db.WATER
     elseif name == "minecraft:dirt" then
-        return db.DIRT, db.EMPTY
+        return db.DIRT, db.WATER
     elseif name == "minecraft:tilledDirt" then
         return db.TDIRT, db.EMPTY
     else 

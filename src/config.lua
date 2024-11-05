@@ -16,8 +16,9 @@ local config = {
     extra_seed_store_side = sides.up,
     drop_store_side = sides.down,
     dump_when_restock=true,
-    score_goal = 31 + 23 + 2
-
+    score_goal = 31 + 23 + 2,
+    max_farm_width=6,
+    strict_farm=false -- whether to abort if it finds non farm block during initialisation (cant be anything weird in the first row)
 }
 
 return config

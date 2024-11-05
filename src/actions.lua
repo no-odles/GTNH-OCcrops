@@ -202,10 +202,12 @@ local function prospectNext()
     else -- something else
         on_farm = false
     end
+    local x, y = table.unpack(pos)
+    db.setEntry({x,y}, score) -- invalid blocks are always set to db.WATER (never replaced)
 
     if on_farm then
-        local x, y = table.unpack(pos)
-        db.setEntry({x,y}, score)
+
+        
         return true
     else
         return false
@@ -223,7 +225,7 @@ local function prospectRegion()
 
 
     -- first row, determine width
-    while isfarm do
+    while isfarm and xdim < config.max_farm_width do
         xdim = xdim + 1
         isfarm = prospectNext()
     end
@@ -235,7 +237,7 @@ local function prospectRegion()
     isfarm = true
 
 
-    while isfarm do
+    while isfarm and ydim < config.max_farm_width do
         isfarm = prospectNext()
         ydim = ydim + 1 
         if ydim % 2 == 0 then
@@ -246,9 +248,9 @@ local function prospectRegion()
 
         if isfarm then
             for _ = 1, xdim-1 do
-                isfarm = prospectNext()
+                isfarm = isfarm and prospectNext()
             end
-            if not isfarm then
+            if not isfarm and config.strict_farm then
                 print("Farm isn't rectangular!")
                 return false, -1, -1
             end

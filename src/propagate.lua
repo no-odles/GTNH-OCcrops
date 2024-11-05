@@ -16,7 +16,7 @@ local harvesting = false
 
 
 
-local function check_and_replace(score)
+local function checkAndReplace(score)
     if score > worst then
         local found, idx = inv.findSeed(score) 
         if not found then
@@ -31,7 +31,7 @@ local function check_and_replace(score)
             act.plant(idx, score)
 
             worst_pos, worst = db.getWorstCrop()
-            check_and_replace(score2)
+            checkAndReplace(score2)
         end
 
     end
@@ -54,7 +54,7 @@ local function propagate()
                 act.harvest(true)
                 if not harvesting then
                     nav.pause()
-                    check_and_replace(score)
+                    checkAndReplace(score)
                     nav.resume()
                 end
             end
@@ -78,6 +78,9 @@ local function main()
         if not inv.dumpInv() then
             print("Full inventory!")
             break
+        end
+        if utils.needsCharge then
+            act.charge()
         end
         harvesting = worst >= config.score_goal
     end
