@@ -63,21 +63,6 @@ local function setEntry(key, val)
     farmdb[{key[1], key[2]}] = val
 end
 
-local function setBounds(bx, by)
-    nx, ny = bx, by
-    local x0, y0 = table.unpack(config.crop_start_pos)
-
-    -- generate poslist
-    if #poslist == 0 then
-        for yi = 0, ny-1 do
-            for xi = 0,-(nx-1),-1 do
-                poslist[#poslist + 1] = {x0+xi,y0+yi}
-            end
-
-        end
-    end
-end
-
 local function setTargetCrop(crop)
     target_crop = crop
 end
@@ -141,6 +126,28 @@ local function getAdjDBEntries(pos)
         end
     end
     return adj
+end
+
+local function setBounds(bx, by)
+    nx, ny = bx, by
+    local x0, y0 = table.unpack(config.crop_start_pos)
+
+    -- generate poslist
+    if #poslist == 0 then
+        for yi = 0, ny-1 do
+
+            if yi % 2 == 0 then
+                for xi = 0,-(nx-1),-1 do
+                    poslist[#poslist + 1] = {x0+xi,y0+yi}
+                end
+            else
+                for xi = -(nx-1),0,1 do
+                    poslist[#poslist + 1] = {x0+xi,y0+yi}
+                end
+            end
+
+        end
+    end
 end
 
 local function validLayout()
