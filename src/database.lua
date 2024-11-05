@@ -135,7 +135,7 @@ end
 local function getAdjSingleCrops(pos)
     local x,y = pos[1], pos[2]
     local adj = {}
-    local newpos = {{x+2, y},{x-2,y},{x,y-2},{x, y+2}}
+    local newpos = {{x+2, y},{x-2,y},{x,y-2},{x, y+2}, {x+2, y+2}, {x+2, y-2}, {x-2, y+2}, {x-2,y-2}}
 
     for i = 1,#newpos do
         if getEntry(newpos[i]) ~= nil then
