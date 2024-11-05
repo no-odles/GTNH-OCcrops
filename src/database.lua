@@ -32,7 +32,11 @@ local function getDB()
 end
 
 local function getEntry(key)
-    return farmdb[key]
+    local i,j = table.unpack(key)
+    if farmdb[i] == nil then
+        return nil
+    end
+    return farmdb[i][j]
 end
 
 local function getBounds()
@@ -60,7 +64,11 @@ local function getPosList()
 end
 
 local function setEntry(key, val)
-    farmdb[{key[1], key[2]}] = val
+    local i,j = table.unpack(key)
+    if farmdb[i] == nil then
+        farmdb[i] = {}
+    end
+    farmdb[i][j] = val
 end
 
 local function setTargetCrop(crop)
@@ -83,16 +91,21 @@ local function incDropStoreSlot()
 end
 
 local function setEmpty(key)
-    farmdb[{key[1], key[2]}] = EMPTY
+    local i,j = table.unpack(key)
+    if farmdb[i] == nil then
+        farmdb[i] = {}
+    end
+    farmdb[i][j] = EMPTY
 end
 local function getWorst()
     local worst = WATER
     local key
     for i = 1,nx do
         for j = 1,ny do 
-            if farmdb[{i,j}] < worst then
+            local entry = farmdb[i][j]
+            if entry < worst then
                 key = {i,j}
-                worst = farmdb[key]
+                worst = entry
             end
         end
     end
@@ -119,7 +132,7 @@ end
 local function getAdjDBEntries(pos)
     local x,y = pos[1], pos[2]
     local adj = {}
-    local newpos = {{x+1, y},{x-1,y},{x,y-1},{x, y+1}}
+    local newpos = {{x+2, y},{x-2,y},{x,y-2},{x, y+2}}
 
     for i = 1,#newpos do
         if getEntry(newpos[i]) ~= nil then
@@ -158,7 +171,7 @@ local function validLayout()
     local val
     for i = 1,#next_to_start do
         key = next_to_start[i]
-        val = farmdb[key]
+        val = getEntry(key)
         valid = valid or  (val ~= nil and (val >= 0 or val == WRONG_PLANT))
     end
 

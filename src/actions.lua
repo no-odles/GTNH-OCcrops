@@ -267,7 +267,7 @@ local function init()
     charge()
 
     -- restock inventory
-    inv.restockSticks()
+    inv.restockSticks(true)
 
     robot.select(config.spade_slot)
     local spade_slot = inv_c.getStackInInternalSlot()
