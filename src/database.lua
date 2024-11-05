@@ -108,7 +108,8 @@ local function getAdj(pos)
 
     for i = 1,#newpos do
         local xn, yn = table.unpack(newpos[i])
-        if math.abs(xi-xn) < nx and math.abs(yi-yn) < ny then
+        -- local dx, dy = math.abs(xi-xn), math.abs(yi-yn)
+        if  (xi-nx < xn and xn <= xi) and  (yi <= yn and yn < yi + ny) then
             adj[#adj + 1 ] = newpos[i]
         end
     end
