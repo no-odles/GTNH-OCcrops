@@ -1,4 +1,4 @@
--- local config = require("config")
+local config = require("config")
 
 
 -- Block Enums
@@ -211,7 +211,7 @@ return {
     incDropStoreSlot=incDropStoreSlot,
     setEmpty=setEmpty,
     setTargetCrop=setTargetCrop,
-    
+
     getWorst=getWorst, 
     validLayout=validLayout,
     getAdjSingleCrops=getAdjSingleCrops,

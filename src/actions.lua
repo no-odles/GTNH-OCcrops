@@ -250,7 +250,7 @@ local function prospectRegion()
             end
             if not isfarm then
                 print("Farm isn't rectangular!")
-                return isfarm, -1, -1
+                return false, -1, -1
             end
             nav.faceDir(nav.NORTH)
         end
@@ -258,7 +258,7 @@ local function prospectRegion()
     end
     print(string.format("ydim is %d", ydim))
 
-    return isfarm, xdim, ydim
+    return true, xdim, ydim
 end
 
 local function init()
