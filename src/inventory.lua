@@ -45,7 +45,7 @@ local function dumpInv(dont_pause)
         if item == nil then 
             local count = count + 1
             success = true
-            if count > 5 then
+            if count > 32 then
                 break
             end
 
@@ -134,7 +134,7 @@ local function findSeed(score)
         local item = inv_c.getStackInInternalSlot(slot)
         if item == nil then
             count = count + 1
-            if count == 5 then
+            if count == 32 then
                 break
             end
         elseif item.crop ~= nil and item.crop.name == db.getTargetCrop() then
