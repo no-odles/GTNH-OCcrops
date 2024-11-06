@@ -57,7 +57,7 @@ local function propagate(test_run)
                     checkAndReplace(score)
                     nav.resume()
                 end
-            elseif score < worst then -- true if wrong_crop as well
+            elseif geo.isPlant(block) and score < worst then -- true if wrong_crop as well
                 act.harvest(true, not is_grown)
             end
         end
