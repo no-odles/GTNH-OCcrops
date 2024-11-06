@@ -52,7 +52,7 @@ local function parseScan(raw_scan)
 end
 
 local function scanIsGrown(scan)
-    return scan["crop:size"] == scan["crop:maxSize"] or (string.match(string.lower(scan["crop:name"]), "stonelilly") ~= nil)--or not scan["crop:cangrow"] TODO: figure out the correct field for thiss
+    return scan["crop:size"] == scan["crop:maxSize"]--or not scan["crop:cangrow"] TODO: figure out the correct field for thiss
 end
 
 local function scanIsWeed(scan)

@@ -127,9 +127,13 @@ end
 
 
 
-local function harvest(replace)
-    robot.swingDown(nil, true)
-    if replace then
+local function harvest(replace, be_careful)
+    if be_careful then
+        robot.useDown()
+    else
+        robot.swingDown(nil, true)
+    end
+        if replace then
         placeCropstick()
     end
 end
