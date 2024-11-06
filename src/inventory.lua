@@ -9,9 +9,7 @@ local config = require("config")
 local geo = require("geolyse")
 
 local function halfFull()
-    local halfpoint = config.inv_size // 2
-    robot.select(config.inv_size)
-    if inv_c.getStackInInternalSlot() == nil then
+    if inv_c.getStackInInternalSlot(config.inv_size // 2) == nil then
         return false
     else
         return  true
