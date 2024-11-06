@@ -130,7 +130,7 @@ end
 local function findSeed(score) 
     local success = false
     local count = 0 -- how many in a row to allow
-    for slot = config.first_storage_slot, config.inv_size do
+    for slot = 1, config.inv_size do
         local item = inv_c.getStackInInternalSlot(slot)
         if item == nil then
             count = count + 1
