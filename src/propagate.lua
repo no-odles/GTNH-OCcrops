@@ -79,7 +79,7 @@ local function main()
     end
     worst_pos, worst = db.getWorstCrop()
     while propagate(false) do
-        if not inv.dumpInv() then
+        if not inv.dumpInv(true) then
             print("Full inventory!")
             break
         end
