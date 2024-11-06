@@ -48,7 +48,7 @@ local function propagate(test_run)
             act.weed(true)
         elseif utils.dblCrop(pos) then
             if is_grown then -- non crop blocks will never be grown
-                if inv.isFull() then
+                if inv.halfFull() then
                     looping = looping and inv.dumpInv()
                 end
                 act.harvest(true)
