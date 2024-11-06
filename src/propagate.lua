@@ -26,7 +26,7 @@ local function checkAndReplace(score)
 
             nav.moveTo(worst_pos)
             local block2, score2, is_grown2, is_weed2 = geo.scanCrop()
-            act.harvest(true)
+            act.harvest(true, not is_grown2)
 
             act.plant(idx, score)
 
