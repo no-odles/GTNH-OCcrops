@@ -219,7 +219,7 @@ end
 local function prospectRegion()
     -- Find out the dimensions of the farm
     local isfarm, done_scan = true, false
-    local xdim, ydim = 0, 0
+    local xdim, ydim = 1, 1
 
     -- initial conditions (to be extra sure)
     nav.moveTo(config.crop_start_pos)
@@ -239,20 +239,21 @@ local function prospectRegion()
         nav.moveRel({1,0,0})
         xdim = xdim - 1
     end
-    nav.faceDir(nav.NORTH)
     isfarm = true
 
 
     while isfarm and ydim < config.max_farm_width do
+        nav.faceDir(nav.NORTH)
+
         isfarm = prospectNext()
         if not isfarm then
             break
         end
         ydim = ydim + 1
         if ydim % 2 == 0 then
-            nav.faceDir(nav.WEST)
-        else
             nav.faceDir(nav.EAST)
+        else
+            nav.faceDir(nav.WEST)
         end
 
         if isfarm then
@@ -265,7 +266,6 @@ local function prospectRegion()
             else
                 isfarm = true
             end
-            nav.faceDir(nav.NORTH)
         end
 
     end
