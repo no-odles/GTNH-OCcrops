@@ -14,6 +14,7 @@ local inv = require("inventory")
 
 local function doAtEach(action, reverse)
     local poslist = db.getPosList()
+    local outlist = {}
     for i = 1, #poslist do
         local pos
         if reverse then
@@ -22,9 +23,10 @@ local function doAtEach(action, reverse)
             pos = poslist[i]
         end
         nav.moveTo(pos)
-        action()
+        outlist[#outlist + 1] = action()
 
     end
+    return outlist
 
 end
 

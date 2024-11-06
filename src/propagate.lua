@@ -37,10 +37,10 @@ local function checkAndReplace(score)
     end
 end
 
-local function propagate()
+local function propagate(test_run)
     local looping = true
 
-    local function inspect_at()
+    local function inspectAt()
         local pos = nav.getPos()
         local block, score, is_grown, is_weed = geo.scanCrop()
 
@@ -61,7 +61,11 @@ local function propagate()
         end
     end
 
-    act.doAtEach(inspect_at)
+    if test_run then
+        return inspectAt()
+    else
+        act.doAtEach(inspectAt)
+    end
 
     return looping
 
@@ -74,7 +78,7 @@ local function main()
         return
     end
     worst_pos, worst = db.getWorstCrop()
-    while propagate() do
+    while propagate(false) do
         if not inv.dumpInv() then
             print("Full inventory!")
             break
@@ -89,4 +93,8 @@ local function main()
 
 end
 
-main()
+return {
+    main=main,
+    propagate=propagate,
+    checkAndReplace=checkAndReplace
+}
