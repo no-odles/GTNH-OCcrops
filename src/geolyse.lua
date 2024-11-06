@@ -52,7 +52,7 @@ local function parseScan(raw_scan)
 end
 
 local function scanIsGrown(scan)
-    return scan["crop:size"] == scan["crop:maxSize"]
+    return scan["crop:size"] == scan["crop:maxSize"] --|| not scan["crop:cangrow"] TODO: figure out the correct field for thiss
 end
 
 local function scanIsWeed(scan)
@@ -79,11 +79,7 @@ local function evalCrop(crop_scan)
         scan = crop_scan
     end
 
-    if scan.crop.resistance <= config.resistance_target then
-        res_score = scan.crop.resistance
-    else
-        res_score = -scan.crop.resistance
-    end
+    res_score = -math.abs(scan.crop.resistance - config.resistance_target)
     
     return math.max(0, scan.crop.growth + scan.crop.gain + res_score) -- -1 is empty, so literally any correct crop must be better than that
 end
