@@ -281,7 +281,7 @@ local function init()
     inv.restockSticks(true)
 
     local spade_slot = inv_c.getStackInInternalSlot(config.spade_slot)
-    if spade_slot == nil then -- swap the spade back
+    if spade_slot == nil or spade_slot.name ~= "berriespp:itemSpade" then -- swap the spade back
         robot.select(config.spade_slot)
         inv_c.equip()
         spade_slot = inv_c.getStackInInternalSlot(config.spade_slot)

@@ -12,11 +12,11 @@ local function isEmpty(block)
 end
 
 local function isWater(block)
-    return block == db.WATER
+    return block == db.BWATER
 end
 
 local function isFarmTile(block)
-    return block == db.TDIRT or block == db.WATER
+    return block == db.TDIRT or block == db.BWATER
 end
 
 local function isEmptyCropstick(block)
