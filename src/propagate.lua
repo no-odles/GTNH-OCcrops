@@ -79,7 +79,7 @@ local function main()
             print("Full inventory!")
             break
         end
-        if utils.needsCharge then
+        if utils.needsCharge() then
             act.charge()
         end
         harvesting = worst >= config.score_goal
