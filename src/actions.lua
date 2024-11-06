@@ -204,12 +204,11 @@ local function prospectNext()
     else -- something else
         on_farm = false
     end
+
     local x, y = table.unpack(pos)
     db.setEntry({x,y}, score) -- invalid blocks are always set to db.WATER (never replaced)
 
     if on_farm then
-
-        
         return true
     else
         return false
@@ -232,7 +231,6 @@ local function prospectRegion()
         isfarm = prospectNext()
     end
 
-    print(string.format("xdim is %d", xdim))
 
     -- move to next row
     if not isfarm then
@@ -240,6 +238,7 @@ local function prospectRegion()
         xdim = xdim - 1
     end
     isfarm = true
+    print(string.format("xdim is %d", xdim))
 
 
     while isfarm and ydim < config.max_farm_width do
