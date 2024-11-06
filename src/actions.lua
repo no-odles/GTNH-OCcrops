@@ -257,7 +257,7 @@ local function prospectRegion()
         end
 
         if isfarm then
-            for _ = 1, xdim do
+            for _ = 1, xdim-1 do
                 isfarm = isfarm and prospectNext()
             end
             if not isfarm and config.strict_farm then
