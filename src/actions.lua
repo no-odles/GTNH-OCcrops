@@ -233,15 +233,22 @@ local function prospectRegion()
     end
 
     print(string.format("xdim is %d", xdim))
+
     -- move to next row
-    nav.moveRel({1,0,0})
+    if not isfarm then
+        nav.moveRel({1,0,0})
+        xdim = xdim - 1
+    end
     nav.faceDir(nav.NORTH)
     isfarm = true
 
 
     while isfarm and ydim < config.max_farm_width do
         isfarm = prospectNext()
-        ydim = ydim + 1 
+        if not isfarm then
+            break
+        end
+        ydim = ydim + 1
         if ydim % 2 == 0 then
             nav.faceDir(nav.WEST)
         else
@@ -249,12 +256,14 @@ local function prospectRegion()
         end
 
         if isfarm then
-            for _ = 1, xdim-1 do
+            for _ = 1, xdim do
                 isfarm = isfarm and prospectNext()
             end
             if not isfarm and config.strict_farm then
                 print("Farm isn't rectangular!")
                 return false, -1, -1
+            else
+                isfarm = true
             end
             nav.faceDir(nav.NORTH)
         end
