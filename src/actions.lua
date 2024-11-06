@@ -257,7 +257,7 @@ local function prospectRegion()
 
         if isfarm then
             for _ = 1, xdim-1 do
-                isfarm = isfarm and prospectNext()
+                isfarm = prospectNext() and isfarm
             end
             if not isfarm and config.strict_farm then
                 print("Farm isn't rectangular!")
