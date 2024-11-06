@@ -138,7 +138,7 @@ local function scanCrop()
         return block, bscore, scanIsGrown(scan), is_weed
     end
 
-    return block, bscore, nil, nil
+    return block, bscore, true, nil
 
 end
 
