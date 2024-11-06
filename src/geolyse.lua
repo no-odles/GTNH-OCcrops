@@ -138,7 +138,8 @@ local function scanCrop()
     local block, bscore = score(scan)
 
     if isPlant(block) then
-        return block, bscore, scanIsGrown(scan), scanIsWeed(scan)
+        local is_weed = scanIsWeed(scan) or (config.non_targets_are_weeds and bscore == db.WRONG_PLANT)
+        return block, bscore, scanIsGrown(scan), is_weed
     end
 
     return block, bscore, nil, nil

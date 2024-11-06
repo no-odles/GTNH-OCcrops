@@ -18,7 +18,8 @@ local config = {
     dump_when_restock=true,
     score_goal = 31 + 23 + 2,
     max_farm_width=10,
-    strict_farm=false -- whether to abort if it finds non farm block during initialisation (cant be anything weird in the first row)
+    strict_farm=false, -- whether to abort if it finds non farm block during initialisation (cant be anything weird in the first row)
+    non_targets_are_weeds=false
 }
 
 return config
