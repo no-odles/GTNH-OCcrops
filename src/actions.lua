@@ -31,13 +31,17 @@ local function doAtEach(action, reverse)
 end
 
 
-local function charge()
-    nav.pause()
+local function charge(dont_pause)
+    if not dont_pause then
+        nav.pause()
+    end
     nav.moveTo(config.start_pos)
     while computer.energy() / computer.maxEnergy() < 0.99 do
         os.sleep(0.2)
     end
+    if not dont_pause then
     nav.resume()
+    end
 end
 
 -- Not possible
@@ -61,7 +65,10 @@ local function placeCropstick(n)
 
     robot.select(config.cropstick_slot)
     if robot.count() < n+1 then
-        inv.restockSticks()
+        local sticks = inv.restockSticks()
+        if not sticks then
+            print("Out of Cropsticks!")
+        end
     end
     robot.select(config.cropstick_slot)
 

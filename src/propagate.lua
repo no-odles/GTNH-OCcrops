@@ -79,12 +79,19 @@ local function main()
     end
     worst_pos, worst = db.getWorstCrop()
     while propagate(false) do
+
+        if not inv.restockSticks then
+            print("Out of Cropsticks!")
+            break
+        end
         if not inv.dumpInv(true) then
             print("Full inventory!")
             break
         end
+
+        
         if utils.needsCharge() then
-            act.charge()
+            act.charge(true)
         end
         harvesting = worst >= config.score_goal
     end

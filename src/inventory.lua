@@ -124,6 +124,10 @@ local function restockSticks(dont_pause)
     if not dont_pause then
         nav.resume()
     end
+
+    -- check if out of cropsticks
+    sticks = inv_c.getStackInInternalSlot(config.cropstick_slot)
+    return sticks == 64
 end
 
 
