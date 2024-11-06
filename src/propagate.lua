@@ -93,6 +93,8 @@ local function main()
 
 end
 
+main()
+
 return {
     main=main,
     propagate=propagate,
