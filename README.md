@@ -4,5 +4,5 @@ To install, run:
 
 ```wget https://raw.githubusercontent.com/no-odles/GTNH-OCcrops/refs/heads/main/src/setup.lua && setup```
 
-on a robot with a wifi card. to use the program, run:
+on a robot with an internet card. to use the program, run:
 ```propagate```
