@@ -25,6 +25,21 @@ local function isFull()
     end
 end
 
+local function storeInInv(side, internal_slot, ext_inv_size)
+    local store_slot = 1
+    local slot_is_empty = false
+    local stored = false
+    while not stored and store_slot <= ext_inv_size do
+        slot_is_empty = inv_c.getSlotStackSize(side, store_slot) == 0
+        if slot_is_empty then
+            robot.select(internal_slot)
+            stored = inv_c.dropIntoSlot(side, store_slot)
+        end
+        store_slot = store_slot + 1
+    end
+    return stored
+end
+
 local function dumpInv(dont_pause)
     print("Emptying inventory!")
     if not dont_pause then
@@ -34,40 +49,36 @@ local function dumpInv(dont_pause)
     nav.moveTo(config.above_storage)
     nav.faceDir(nav.EAST)
   
-    local success, store_slot
+    local success
     local count = 0
+    local item
+
+    local seed_store_size = inv_c.getInventorySize(config.seed_store_side)
+    local extra_seed_store_size = inv_c.getInventorySize(config.extra_seed_store_side)
+    local drop_store_size = inv_c.getInventorySize(config.drop_store_side)
+
     for slot = config.first_storage_slot, config.inv_size do
         success = false
-        store_slot = 1
-        local item = inv_c.getStackInInternalSlot(slot)
-        if item == nil then 
-            local count = count + 1
+        item = inv_c.getStackInInternalSlot(slot)
+        if item == nil then
+            count = count + 1
             success = true
-            if count > 32 then
+            if count > config.inv_search_limit then
                 break
             end
 
         elseif item.name == "IC2:itemCropSeed" then
             count = 0
-            robot.select(slot)
             if item.crop.name == db.getTargetCrop() then 
-                while not success and store_slot <= inv_c.getInventorySize(config.seed_store_side) do
-                    success = inv_c.dropIntoSlot(config.seed_store_side, store_slot)
-                    store_slot = store_slot + 1
-                end
+                success = storeInInv(config.seed_store_side, slot, seed_store_size)
             else
-                while not success and store_slot <= inv_c.getInventorySize(config.extra_seed_store_side) do
-                    success = inv_c.dropIntoSlot(config.extra_seed_store_side, store_slot)
-                    store_slot = store_slot + 1
-                end
+                success = storeInInv(config.extra_seed_store_side, slot, extra_seed_store_size)
+
             end
         else
             count = 0
-            robot.select(slot)
-            while not success and store_slot <= inv_c.getInventorySize(config.drop_store_side) do
-                success = inv_c.dropIntoSlot(config.drop_store_side, store_slot)
-                store_slot = store_slot + 1
-            end
+            success = storeInInv(config.drop_store_side, slot, drop_store_size)
+
         end
 
         if not success then
