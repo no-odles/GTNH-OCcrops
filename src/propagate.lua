@@ -18,20 +18,24 @@ local harvesting = false
 
 local function checkAndReplace(score)
     if score > worst then
-        local found, idx = inv.findSeed(score) 
+        local found, idx, num_seeds = inv.findSeed(score) 
         if not found then
             print("Lost a seed :(") -- :(
         else
-            print(string.format("Replacing Crop at {%d, %d} score (%d -> %d)", worst_pos[1], worst_pos[2], worst, score))
+            for _ = 1, num_seeds do
+                print(string.format("Replacing Crop at {%d, %d} score (%d -> %d)", worst_pos[1], worst_pos[2], worst, score))
 
-            nav.moveTo(worst_pos)
-            local block2, score2, is_grown2, is_weed2 = geo.scanCrop()
-            act.harvest(true, not is_grown2)
+                nav.moveTo(worst_pos)
+                local block2, score2, is_grown2, is_weed2 = geo.scanCrop()
+                act.harvest(true, not is_grown2)
 
-            act.plant(idx, score)
+                act.plant(idx, score)
 
-            worst_pos, worst = db.getWorstCrop()
-            checkAndReplace(score2)
+                worst_pos, worst = db.getWorstCrop()
+                if worst >= score then
+                    break
+                end
+            end
         end
 
     end

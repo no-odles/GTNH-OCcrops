@@ -154,7 +154,7 @@ local function findSeed(score)
             count = 0
             if geo.evalCrop(item) == score then
                 success = true
-                return success, slot
+                return success, slot, item.size
             end
         else
             count = 0
