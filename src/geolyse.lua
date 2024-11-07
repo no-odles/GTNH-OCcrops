@@ -80,6 +80,10 @@ local function evalCrop(crop_scan)
     end
 
     res_score = -math.abs(scan.crop.resistance - config.resistance_target)
+
+    if scan.crop.growth > config.max_growth then
+        return db.WORST
+    end
     
     return math.max(0, scan.crop.growth + scan.crop.gain + res_score) -- -1 is empty, so literally any correct crop must be better than that
 end
