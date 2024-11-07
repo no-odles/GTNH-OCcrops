@@ -130,12 +130,12 @@ end
 local function harvest(replace, be_careful)
     local pos = nav.getPos()
     if be_careful then
-        robot.useDown(sides.top)
+        robot.useDown(sides.front)
         if replace and utils.dblCrop(pos) then
             placeCropstick(1)
         end
     else
-        robot.swingDown(sides.top, true)
+        robot.swingDown(sides.front, true)
         if replace then
             placeCropstick()
         end
