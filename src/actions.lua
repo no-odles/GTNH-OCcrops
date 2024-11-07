@@ -128,14 +128,21 @@ end
 
 
 local function harvest(replace, be_careful)
+    local pos = nav.getPos()
     if be_careful then
-        robot.useDown()
+        robot.useDown(sides.top)
+        if replace and utils.dblCrop(pos) then
+            placeCropstick(1)
+        end
     else
-        robot.swingDown(nil, true)
-    end
+        robot.swingDown(sides.top, true)
         if replace then
-        placeCropstick()
+            placeCropstick()
+        end
     end
+
+    db.setEmpty(pos)
+    
 end
 
 local function plant(idx, score)
