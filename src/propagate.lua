@@ -56,11 +56,10 @@ local function propagate(test_run)
                     looping = looping and inv.dumpInv()
                 end
                 act.harvest(true, not is_grown)
-                if not harvesting then
-                    nav.pause()
-                    checkAndReplace(score)
-                    nav.resume()
-                end
+                
+                nav.pause()
+                checkAndReplace(score)
+                nav.resume()
             elseif geo.isPlant(block) and score < worst then -- true if wrong_crop as well
                 act.harvest(true, not is_grown)
             end
