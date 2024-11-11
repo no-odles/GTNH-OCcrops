@@ -18,10 +18,12 @@ local harvesting = false
 
 local function checkAndReplace(score)
     if score > worst then
+        print("Searching for seed")
         local found, idx, num_seeds = inv.findSeed(score) 
         if not found then
             print("Lost a seed :(") -- :(
         else
+            print(string.format("Planting %d seeds!", num_seeds))
             for _ = 1, num_seeds do
                 print(string.format("Replacing Crop at {%d, %d} score (%d -> %d)", worst_pos[1], worst_pos[2], worst, score))
 
