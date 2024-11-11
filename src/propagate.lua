@@ -83,6 +83,9 @@ local function main()
     if not valid then
         return
     end
+
+    worst_pos, worst = db.getWorstCrop()
+
     while propagate(false) do
 
         if not inv.restockSticks then
