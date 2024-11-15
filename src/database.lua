@@ -13,10 +13,10 @@ local PLANT = 7
 local UNKNOWN = -1
 
 -- score Enums
-local WORST = -3 -- can't be worse than the worst
-local WRONG_PLANT = -2 -- replace wrong plants before empty cropsticks
-local EMPTY = -1
-local WATER = 111 -- crop will never be replaced (Max score should be 93 no matter the config)
+local WORST = -10 -- can't be worse than the worst
+local WRONG_PLANT = -2 -- replace empty cropsticks before wrong plants
+local EMPTY = -3
+local WATER = 111 -- 'crop' will never be replaced (Max score should be 93 no matter the config)
 
 
 local farmdb = {}
