@@ -85,7 +85,12 @@ local function evalCrop(crop_scan)
         return db.WORST
     end
     
-    return math.max(0, scan.crop.growth + scan.crop.gain + res_score) -- -1 is empty, so literally any correct crop must be better than that
+    local score =  math.max(0, scan.crop.growth + scan.crop.gain + res_score) -- -1 is empty, so literally any correct crop must be better than that
+    if scan.crop.name == db.getTargetCrop() then
+        return score
+    else
+        return score - config.wrong_plant_penalty
+    end
 end
 
 local function score(blockscan)
@@ -96,12 +101,11 @@ local function score(blockscan)
         if cname == nil then
             -- empty / double cropstick
             return db.CSTICK, db.EMPTY
-        elseif cname == db.getTargetCrop() then
-            return db.PLANT, evalCrop(blockscan)
         elseif scanIsWeed(blockscan) then
             return db.WEED, db.WORST
         else
-            return db.PLANT, db.WRONG_PLANT
+            -- looks like a plant to me
+            return db.PLANT, evalCrop(blockscan)
         end
     elseif name == "minecraft:air" then
         return db.AIR, db.WATER
@@ -138,8 +142,9 @@ local function scanCrop()
     local block, bscore = score(scan)
 
     if isPlant(block) then
-        local is_weed = scanIsWeed(scan) or (config.non_targets_are_weeds and bscore == db.WRONG_PLANT)
-        return block, bscore, scanIsGrown(scan), is_weed
+        local is_wrong_plant = scan["crop:name"] ~= db.getTargetCrop()
+        local is_weed = scanIsWeed(scan) or (config.non_targets_are_weeds and is_wrong_plant)
+        return block, bscore, scanIsGrown(scan), is_weed, is_wrong_plant
     end
 
     return block, bscore, nil, nil

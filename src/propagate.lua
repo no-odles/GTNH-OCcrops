@@ -48,12 +48,15 @@ local function propagate(test_run)
 
     local function inspectAt()
         local pos = nav.getPos()
-        local block, score, is_grown, is_weed = geo.scanCrop()
+        local block, score, is_grown, is_weed, is_wrong_plant = geo.scanCrop()
 
         if is_weed then
             act.weed(true)
         elseif utils.dblCrop(pos) then
-            if is_grown then -- non crop blocks will never be grown
+
+            if is_wrong_plant then
+                act.harvest(true, not is_grown)
+            elseif is_grown then -- non crop blocks will never be grown
                 if inv.halfFull() then
                     looping = looping and inv.dumpInv()
                 end
@@ -62,9 +65,7 @@ local function propagate(test_run)
 
                 nav.pause()
                 checkAndReplace(score)
-                nav.resume()
-            elseif geo.isPlant(block) and score <= db.WRONG_PLANT then
-                act.harvest(true, not is_grown)
+                nav.resume()                
             end
         end
     end

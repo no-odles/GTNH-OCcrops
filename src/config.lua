@@ -20,7 +20,8 @@ local config = {
     max_farm_width=4,
     strict_farm=false, -- whether to abort if it finds non farm block during initialisation (cant be anything weird in the first row)
     non_targets_are_weeds=false,
-    inv_search_limit=15 -- number of empty slots between items to allow before an inventroy is considered empty
+    inv_search_limit=15, -- number of empty slots between items to allow before an inventroy is considered empty
+    wrong_plant_penalty=3 -- amount to subtract from the score of wrong plants
 }
 
 return config
